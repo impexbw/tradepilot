@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'head.html' %}
+<body class="bg-gray-100">
+
+    {% include 'header.html' %}
+    
+    <div class="flex">
+        {% include 'left_column.html' %}
+        <main class="flex-1 bg-gray-50 p-6 flex justify-center items-center">
+            <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+                <h2 class="text-2xl font-bold mb-6 text-center">Edit Objectives and Rules</h2>
+                <form method="POST" action="{{ url_for('edit') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-lg font-bold mb-4">Objective Breakdown</h3>
+                            <label for="min_trading_days" class="block mb-2"><strong>Minimum Trading Days:</strong></label>
+                            {{ form.min_trading_days(class="w-full p-2 border border-gray-300 rounded mb-4") }}
+                            
+                            <label for="max_daily_loss" class="block mb-2"><strong>Max Daily Loss:</strong></label>
+                            {{ form.max_daily_loss(class="w-full p-2 border border-gray-300 rounded mb-4") }}
+                            
+                            <label for="max_loss" class="block mb-2"><strong>Max Loss:</strong></label>
+                            {{ form.max_loss(class="w-full p-2 border border-gray-300 rounded mb-4") }}
+                            
+                            <label for="profit_target" class="block mb-2"><strong>Profit Target:</strong></label>
+                            {{ form.profit_target(class="w-full p-2 border border-gray-300 rounded mb-4") }}
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-bold mb-4">Your Specific Rules</h3>
+                            <label for="instrument" class="block mb-2"><strong>Instrument:</strong></label>
+                            {{ form.instrument(class="w-full p-2 border border-gray-300 rounded mb-4") }}
+                            
+                            <label for="trading_session" class="block mb-2"><strong>Trading Session:</strong></label>
+                            {{ form.trading_session(class="w-full p-2 border border-gray-300 rounded mb-4") }}
+                            
+                            <label for="risk_reward" class="block mb-2"><strong>Risk-Reward Ratio:</strong></label>
+                            {{ form.risk_reward(class="w-full p-2 border border-gray-300 rounded mb-4") }}
+                            
+                            <label for="daily_max_loss" class="block mb-2"><strong>Daily Max Loss:</strong></label>
+                            {{ form.daily_max_loss(class="w-full p-2 border border-gray-300 rounded mb-4") }}
+                            
+                            <label for="consecutive_losers" class="block mb-2"><strong>Consecutive Losers Limit:</strong></label>
+                            {{ form.consecutive_losers(class="w-full p-2 border border-gray-300 rounded mb-4") }}
+                            
+                            <label for="trading_strategy" class="block mb-2"><strong>Trading Strategy:</strong></label>
+                            {{ form.trading_strategy(class="w-full p-2 border border-gray-300 rounded mb-4") }}
+                            
+                            <label for="timeframes" class="block mb-2"><strong>Timeframes:</strong></label>
+                            {{ form.timeframes(class="w-full p-2 border border-gray-300 rounded mb-4") }}
+                            
+                            <label for="trades_per_day" class="block mb-2"><strong>Trades Per Day:</strong></label>
+                            {{ form.trades_per_day(class="w-full p-2 border border-gray-300 rounded mb-4") }}
+                        </div>
+                    </div>
+                    <div class="flex justify-center mt-8">
+                        {{ form.submit(class="bg-blue-600 text-white py-2 px-4 rounded w-full md:w-1/2") }}
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

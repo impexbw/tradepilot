@@ -1,0 +1,24 @@
+<header class="bg-gray-900 text-white p-4 flex justify-between items-center">
+    <div class="flex items-center">
+        <img src="https://via.placeholder.com/40" alt="Logo" class="mr-3">
+        <h1 class="text-2xl text-white font-bold">TradePilot</h1>
+    </div>
+    <div class="relative flex items-center">
+        <span class="mr-4">Hello, {{ current_user.username }}</span>
+        <div class="relative">
+            <button id="user-menu-toggle" class="focus:outline-none">
+                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">M</div>
+            </button>
+            <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20">
+                <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Log out</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+document.getElementById('user-menu-toggle').addEventListener('click', function() {
+    var menu = document.getElementById('user-menu');
+    menu.classList.toggle('hidden');
+});
+</script>

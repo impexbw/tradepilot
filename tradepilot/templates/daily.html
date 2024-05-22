@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include 'head.html' %}
+
+<body class="bg-gray-100">
+
+    {% include 'header.html' %}
+
+    <!-- Main Container -->
+    <div class="flex">
+        {% include 'left_column.html' %}
+        <main class="flex-1 bg-gray-50 p-6">
+            <div class="container mx-auto p-6">
+                <h2 class="text-2xl font-bold mb-6">Daily Routine & Checklist</h2>
+
+                <!-- Pre-Market Checklist -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-bold mb-2">Pre-Market Checklist</h3>
+                    <div class="checklist">
+                        <label><input type="checkbox" id="check1"> Review market news and economic calendar</label>
+                        <label><input type="checkbox" id="check2"> Analyze overnight market movements</label>
+                        <label><input type="checkbox" id="check3"> Check for any important company announcements</label>
+                        <label><input type="checkbox" id="check4"> Set up your trading station (charts, platforms, etc.)</label>
+                        <label><input type="checkbox" id="check5"> Review your trading plan for the day</label>
+                        <label><input type="checkbox" id="check6"> Ensure risk management rules are in place</label>
+                    </div>
+                </div>
+
+                <!-- Daily Trading Rules -->
+                <div>
+                    <h3 class="text-lg font-bold mb-2">Daily Trading Rules</h3>
+                    <div class="checklist">
+                        <label><input type="checkbox" id="check7"> Adhere to the set risk-reward ratio</label>
+                        <label><input type="checkbox" id="check8"> Limit daily maximum loss</label>
+                        <label><input type="checkbox" id="check9"> Follow the trading strategy (e.g., support and resistance, pullbacks)</label>
+                        <label><input type="checkbox" id="check10"> Stick to the predefined timeframes</label>
+                        <label><input type="checkbox" id="check11"> Limit the number of trades per day</label>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Function to save the state of checkboxes to localStorage
+        function saveCheckboxState() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((checkbox, index) => {
+                localStorage.setItem(`checkbox${index}`, checkbox.checked);
+            });
+        }
+
+        // Function to load the state of checkboxes from localStorage
+        function loadCheckboxState() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((checkbox, index) => {
+                const checked = localStorage.getItem(`checkbox${index}`) === 'true';
+                checkbox.checked = checked;
+            });
+        }
+
+        // Load the state of checkboxes when the page loads
+        window.addEventListener('load', loadCheckboxState);
+
+        // Save the state of checkboxes whenever they are changed
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', saveCheckboxState);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'head.html' %}
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white p-8 rounded shadow-md w-full max-w-sm">
+        <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+        <form method="POST" action="{{ url_for('login') }}">
+            {{ form.hidden_tag() }}
+            <div class="mb-4">
+                {{ form.email.label(class="block mb-2") }}
+                {{ form.email(class="w-full p-2 border border-gray-300 rounded") }}
+                {% for error in form.email.errors %}
+                    <span class="text-red-500">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="mb-4">
+                {{ form.password.label(class="block mb-2") }}
+                {{ form.password(class="w-full p-2 border border-gray-300 rounded") }}
+                {% for error in form.password.errors %}
+                    <span class="text-red-500">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="mb-4">
+                {{ form.remember(class="mr-2") }} {{ form.remember.label() }}
+            </div>
+            <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded w-full">Login</button>
+        </form>
+        <div class="mt-4 text-center">
+            <a href="{{ url_for('register') }}" class="text-blue-600 hover:underline">Register</a>
+            <span class="mx-2">|</span>
+            <a href="{{ url_for('forgot_password') }}" class="text-blue-600 hover:underline">Forgot Password?</a>
+        </div>
+    </div>
+
+</body>
+</html>

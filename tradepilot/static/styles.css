@@ -1,0 +1,21 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #4a5568; /* Dark gray for body text */
+}
+h1, h2, h3 {
+    font-size: 16px;
+    color: #1a202c; /* Dark blue for headings */
+    font-weight: 600;
+}
+strong {
+    color: #2b6cb0; /* Medium blue for bold text */
+}
+.checklist label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.checklist input[type="checkbox"] {
+    margin-right: 10px;
+}
