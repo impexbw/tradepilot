@@ -8,7 +8,7 @@
     {% include 'header.html' %}
 
     <!-- Main Container -->
-    <div class="flex">
+    <div class="flex flex-col md:flex-row">
         {% include 'left_column.html' %}
         <main class="flex-1 bg-gray-50 p-6">
             <div class="container mx-auto p-6">
@@ -17,25 +17,25 @@
                 <!-- Pre-Market Checklist -->
                 <div class="mb-6">
                     <h3 class="text-lg font-bold mb-2">Pre-Market Checklist</h3>
-                    <div class="checklist">
-                        <label><input type="checkbox" id="check1"> Review market news and economic calendar</label>
-                        <label><input type="checkbox" id="check2"> Analyze overnight market movements</label>
-                        <label><input type="checkbox" id="check3"> Check for any important company announcements</label>
-                        <label><input type="checkbox" id="check4"> Set up your trading station (charts, platforms, etc.)</label>
-                        <label><input type="checkbox" id="check5"> Review your trading plan for the day</label>
-                        <label><input type="checkbox" id="check6"> Ensure risk management rules are in place</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <label class="flex items-center"><input type="checkbox" id="check1" class="mr-2"> Review market news and economic calendar</label>
+                        <label class="flex items-center"><input type="checkbox" id="check2" class="mr-2"> Analyze overnight market movements</label>
+                        <label class="flex items-center"><input type="checkbox" id="check3" class="mr-2"> Check for any important company announcements</label>
+                        <label class="flex items-center"><input type="checkbox" id="check4" class="mr-2"> Set up your trading station (charts, platforms, etc.)</label>
+                        <label class="flex items-center"><input type="checkbox" id="check5" class="mr-2"> Review your trading plan for the day</label>
+                        <label class="flex items-center"><input type="checkbox" id="check6" class="mr-2"> Ensure risk management rules are in place</label>
                     </div>
                 </div>
 
                 <!-- Daily Trading Rules -->
                 <div>
                     <h3 class="text-lg font-bold mb-2">Daily Trading Rules</h3>
-                    <div class="checklist">
-                        <label><input type="checkbox" id="check7"> Adhere to the set risk-reward ratio</label>
-                        <label><input type="checkbox" id="check8"> Limit daily maximum loss</label>
-                        <label><input type="checkbox" id="check9"> Follow the trading strategy (e.g., support and resistance, pullbacks)</label>
-                        <label><input type="checkbox" id="check10"> Stick to the predefined timeframes</label>
-                        <label><input type="checkbox" id="check11"> Limit the number of trades per day</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <label class="flex items-center"><input type="checkbox" id="check7" class="mr-2"> Adhere to the set risk-reward ratio</label>
+                        <label class="flex items-center"><input type="checkbox" id="check8" class="mr-2"> Limit daily maximum loss</label>
+                        <label class="flex items-center"><input type="checkbox" id="check9" class="mr-2"> Follow the trading strategy (e.g., support and resistance, pullbacks)</label>
+                        <label class="flex items-center"><input type="checkbox" id="check10" class="mr-2"> Stick to the predefined timeframes</label>
+                        <label class="flex items-center"><input type="checkbox" id="check11" class="mr-2"> Limit the number of trades per day</label>
                     </div>
                 </div>
             </div>
