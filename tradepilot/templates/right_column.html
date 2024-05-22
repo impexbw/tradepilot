@@ -1,22 +1,22 @@
 <aside class="w-full md:w-1/4 bg-white p-4 shadow-lg mt-4 md:mt-0 md:self-start">
     <section class="bg-white p-4 shadow-lg">
         <h3 class="text-lg font-bold mb-4">Objective Breakdown</h3>
-        <ul>
-            <li class="mb-2"><strong>Minimum Trading Days:</strong> {{ user_data.min_trading_days }}</li>
-            <li class="mb-2"><strong>Max Daily Loss:</strong> {{ user_data.max_daily_loss }}</li>
-            <li class="mb-2"><strong>Max Loss:</strong> {{ user_data.max_loss }}</li>
-            <li class="mb-2"><strong>Profit Target:</strong> {{ user_data.profit_target }}</li>
+        <ul class="text-sm">
+            <li class="mb-2"><span class="font-medium text-gray-700">Minimum Trading Days:</span> {{ user_data.min_trading_days }}</li>
+            <li class="mb-2"><span class="font-medium text-gray-700">Max Daily Loss:</span> {{ user_data.max_daily_loss }}</li>
+            <li class="mb-2"><span class="font-medium text-gray-700">Max Loss:</span> {{ user_data.max_loss }}</li>
+            <li class="mb-2"><span class="font-medium text-gray-700">Profit Target:</span> {{ user_data.profit_target }}</li>
         </ul>
         <h3 class="text-lg font-bold mb-4 mt-6">Your Specific Rules</h3>
-        <ul>
-            <li class="mb-2"><strong>Instrument:</strong> {{ user_data.instrument }}</li>
-            <li class="mb-2"><strong>Trading Session:</strong> {{ user_data.trading_session }}</li>
-            <li class="mb-2"><strong>Risk-Reward Ratio:</strong> {{ user_data.risk_reward }}</li>
-            <li class="mb-2"><strong>Daily Max Loss:</strong> {{ user_data.daily_max_loss }}</li>
-            <li class="mb-2"><strong>Consecutive Losers Limit:</strong> {{ user_data.consecutive_losers }}</li>
-            <li class="mb-2"><strong>Trading Strategy:</strong> {{ user_data.trading_strategy }}</li>
-            <li class="mb-2"><strong>Timeframes:</strong> {{ user_data.timeframes }}</li>
-            <li class="mb-2"><strong>Trades Per Day:</strong> {{ user_data.trades_per_day }}</li>
+        <ul class="text-sm">
+            <li class="mb-2"><span class="font-medium text-gray-700">Instrument:</span> {{ user_data.instrument }}</li>
+            <li class="mb-2"><span class="font-medium text-gray-700">Trading Session:</span> {{ user_data.trading_session }}</li>
+            <li class="mb-2"><span class="font-medium text-gray-700">Risk-Reward Ratio:</span> {{ user_data.risk_reward }}</li>
+            <li class="mb-2"><span class="font-medium text-gray-700">Daily Max Loss:</span> {{ user_data.daily_max_loss }}</li>
+            <li class="mb-2"><span class="font-medium text-gray-700">Consecutive Losers Limit:</span> {{ user_data.consecutive_losers }}</li>
+            <li class="mb-2"><span class="font-medium text-gray-700">Trading Strategy:</span> {{ user_data.trading_strategy }}</li>
+            <li class="mb-2"><span class="font-medium text-gray-700">Timeframes:</span> {{ user_data.timeframes }}</li>
+            <li class="mb-2"><span class="font-medium text-gray-700">Trades Per Day:</span> {{ user_data.trades_per_day }}</li>
         </ul>
         <a href="{{ url_for('edit') }}" class="bg-blue-600 text-white py-2 px-4 rounded mt-4 inline-block">Edit</a>
     </section>
