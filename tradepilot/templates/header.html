@@ -5,7 +5,7 @@
     </div>
     <div class="relative flex items-center">
         <span class="mr-4 hidden md:inline">Hello, {{ current_user.username }}</span>
-        <div class="relative">
+        <div class="relative hidden md:block">
             <button id="user-menu-toggle" class="focus:outline-none">
                 <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">M</div>
             </button>
@@ -29,6 +29,7 @@
             <li class="mb-2"><a href="#" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">book</span>Journal</a></li>
             <li class="mb-2"><a href="#" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">assignment</span>Setups</a></li>
             <li class="mb-2"><a href="#" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">menu_book</span>Playbook</a></li>
+            <li class="mb-2"><a href="{{ url_for('logout') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">logout</span>Log out</a></li>
         </ul>
     </nav>
 </div>
