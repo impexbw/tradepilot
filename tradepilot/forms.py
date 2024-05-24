@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, DateTimeField, IntegerField, DecimalField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, DateTimeField, IntegerField, DecimalField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange, Optional
 
 class RegistrationForm(FlaskForm):
@@ -33,7 +33,7 @@ class UserDataForm(FlaskForm):
 class TradeForm(FlaskForm):
     ticket = StringField('Ticket', validators=[DataRequired()])
     open_time = DateTimeField('Open Time', format='%Y-%m-%d %H:%M:%S', validators=[DataRequired()])
-    trade_type = StringField('Trade Type', validators=[DataRequired()])
+    trade_type = SelectField('Trade Type', choices=[('Buy', 'Buy'), ('Sell', 'Sell')], validators=[DataRequired()])
     size = DecimalField('Size', validators=[DataRequired(), NumberRange(min=0, max=1000000)], places=2)
     item = StringField('Item', validators=[DataRequired()])
     price = DecimalField('Price', validators=[DataRequired(), NumberRange(min=0, max=1000000)], places=2)
