@@ -1,11 +1,4 @@
-<nav>
-    <a href="{{ url_for('add_trade') }}" class="bg-blue-600 text-white w-full py-2 mb-4 block text-center">New Trade Entry</a>
-    <ul>
-        <li class="mb-2"><a href="{{ url_for('index') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">dashboard</span>Dashboard</a></li>
-        <li class="mb-2"><a href="{{ url_for('daily') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">today</span>Daily</a></li>
-        <li class="mb-2"><a href="{{ url_for('calendar') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">calendar_today</span>Calendar</a></li>
-        <li class="mb-2"><a href="{{ url_for('trades') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">book</span>Journal</a></li>
-        <li class="mb-2"><a href="#" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">assignment</span>Setups</a></li>
-        <li class="mb-2"><a href="#" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">menu_book</span>Playbook</a></li>
-    </ul>
-</nav>
+    <!-- New Trade Entry Button -->
+    <nav class="mt-4 p-4">
+        <a href="{{ url_for('add_trade') }}" class="block w-full bg-blue-600 text-white rounded p-2 text-center">New Trade Entry</a>
+    </nav>
