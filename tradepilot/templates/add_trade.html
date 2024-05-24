@@ -95,9 +95,11 @@
     <script>
         flatpickr("input[name='open_time']", {
             enableTime: true,
+            enableSeconds: true,
             dateFormat: "Y-m-d H:i:S",
         });
         flatpickr("input[name='close_time']", {
+            enableSeconds: true,
             enableTime: true,
             dateFormat: "Y-m-d H:i:S",
         });
