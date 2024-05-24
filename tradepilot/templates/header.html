@@ -1,17 +1,24 @@
 <header class="bg-gray-900 text-white p-4 flex justify-between items-center">
     <div class="flex items-center">
-        <img src="https://via.placeholder.com/40" alt="Logo" class="mr-3">
+        <!--<img src="https://via.placeholder.com/40" alt="Logo" class="mr-3">-->
         <a href="{{ url_for('index') }}" class="text-2xl text-white font-bold">tradePilot</a>
+        <!-- Desktop Menu -->
+        <nav class="hidden md:flex ml-4 space-x-4">
+            <a href="{{ url_for('index') }}" class="text-gray-300 hover:text-white">Dashboard</a>
+            <a href="{{ url_for('daily') }}" class="text-gray-300 hover:text-white">Daily</a>
+            <a href="{{ url_for('calendar') }}" class="text-gray-300 hover:text-white">Calendar</a>
+            <a href="{{ url_for('trades') }}" class="text-gray-300 hover:text-white">Journal</a>
+            <a href="#" class="text-gray-300 hover:text-white">Setups</a>
+            <a href="#" class="text-gray-300 hover:text-white">Playbook</a>
+        </nav>
     </div>
-    <div class="relative flex items-center">
+    <div class="flex items-center">
         <span class="mr-4 hidden md:inline">Hello, {{ current_user.username }}</span>
-        <div class="relative hidden md:block">
-            <button id="user-menu-toggle" class="focus:outline-none">
-                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">M</div>
-            </button>
-            <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20">
-                <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Log out</a>
-            </div>
+        <button id="user-menu-toggle" class="focus:outline-none hidden md:block">
+            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">M</div>
+        </button>
+        <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20">
+            <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Log out</a>
         </div>
         <button id="mobile-menu-toggle" class="focus:outline-none ml-4 md:hidden">
             <span class="material-icons">menu</span>
@@ -19,14 +26,44 @@
     </div>
 </header>
 
+<section class="py-2">
+    <div class="container mx-auto px-4 text-black flex justify-end items-center text-xs">
+        <div style="width: 100%; position: relative; overflow: hidden;">
+            <iframe id="fx-widget" src="https://fxpricing.com/fx-widget/ticker-tape-widget.php?id=1,2,3,5,14,20&border=hide&speed=50&pair_weight=normal&click_target=blank&theme=light&tm-cr=FFFFFF&hr-cr=00000013&by-cr=28A745&sl-cr=DC3545&flags=hide&d_mode=compact-name&column=&lang=en&font=Arial, sans-serif" width="100%" height="85" style="border: unset;"></iframe>
+            <div id="fx-pricing-widget-copyright" style="display: none;">
+                <span>Powered by </span><a href="https://fxpricing.com/" target="_blank">FX Pricing</a>
+            </div>
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var iframe = document.getElementById('fx-widget');
+                iframe.onload = function() {
+                    var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    var observer = new MutationObserver(function(mutations) {
+                        mutations.forEach(function(mutation) {
+                            var brandElement = iframeDoc.querySelector('.fcs-brand');
+                            if (brandElement) {
+                                brandElement.style.display = 'none';
+                            }
+                        });
+                    });
+                    observer.observe(iframeDoc.body, { childList: true, subtree: true });
+                };
+            });
+        </script>
+        
+        {% include 'objective_breakdown.html' %}
+    </div>
+</section>
+
 <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-4">
     <nav class="p-4">
-        <button class="bg-blue-600 text-white w-full py-2 mb-4">New Trade Entry</button>
+        <a href="{{ url_for('add_trade') }}" class="bg-blue-600 text-white w-full py-2 mb-4 block text-center">New Trade Entry</a>
         <ul>
             <li class="mb-2"><a href="{{ url_for('index') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">dashboard</span>Dashboard</a></li>
             <li class="mb-2"><a href="{{ url_for('daily') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">today</span>Daily</a></li>
             <li class="mb-2"><a href="{{ url_for('calendar') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">calendar_today</span>Calendar</a></li>
-            <li class="mb-2"><a href="#" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">book</span>Journal</a></li>
+            <li class="mb-2"><a href="{{ url_for('trades') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">book</span>Journal</a></li>
             <li class="mb-2"><a href="#" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">assignment</span>Setups</a></li>
             <li class="mb-2"><a href="#" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">menu_book</span>Playbook</a></li>
             <li class="mb-2"><a href="{{ url_for('logout') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">logout</span>Log out</a></li>

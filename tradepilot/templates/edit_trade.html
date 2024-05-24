@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'head.html' %}
+<body class="bg-gray-100">
+
+    {% include 'header.html' %}
+
+    <div class="flex flex-col md:flex-row">
+        {% include 'left_column.html' %}
+        <main class="flex-1 bg-gray-50 p-6">
+            <div class="container mx-auto p-6">
+                <h2 class="text-2xl font-bold mb-6">Edit Trade</h2>
+                <form method="POST" action="{{ url_for('edit_trade', trade_id=trade.id) }}" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    {{ form.hidden_tag() }}
+                    <style>
+                        .w-15 {
+                            width: 60px; /* Adjust as needed */
+                        }
+                        .input-small {
+                            font-size: 0.75rem;
+                            padding: 0.25rem;
+                        }
+                        .table-small {
+                            font-size: 0.75rem;
+                        }
+                    </style>
+                    <table class="table-small w-full">
+                        <tr>
+                            <td>{{ form.ticket.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.ticket(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.open_time.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.open_time(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", placeholder="YYYY-MM-DD HH:MM:SS") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.trade_type.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.trade_type(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.size.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.size(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.item.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.item(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.price.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.price(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", step="0.01") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.s_l.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.s_l(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", step="0.01") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.t_p.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.t_p(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", step="0.01") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.close_time.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.close_time(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", placeholder="YYYY-MM-DD HH:MM:SS") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.close_price.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.close_price(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", step="0.01") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.comm.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.comm(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", placeholder="0.00", step="0.01") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.taxes.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.taxes(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", placeholder="0.00", step="0.01") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.swap.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.swap(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", placeholder="0.00", step="0.01") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.profit.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.profit(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", step="0.01") }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="text-right py-4">
+                                {{ form.submit(class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline", value="Save") }}
+                            </td>
+                        </tr>                        
+                    </table>
+                </form>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

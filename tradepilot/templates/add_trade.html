@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'head.html' %}
+<body class="bg-gray-100">
+
+    {% include 'header.html' %}
+
+    <div class="container mx-auto p-6">
+        <h2 class="text-2xl font-bold mb-6">Add New Trade</h2>
+        <form method="POST" action="{{ url_for('add_trade') }}" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-wrap">
+            {{ form.hidden_tag() }}
+            <style>
+                .w-15 {
+                    width: 60px; /* Adjust as needed */
+                }
+            </style>
+            <div class="mb-4 mr-4 w-24">
+                {{ form.ticket.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.ticket(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                {% if form.ticket.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.ticket.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-24">
+                {{ form.open_time.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.open_time(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="YYYY-MM-DD HH:MM:SS") }}
+                {% if form.open_time.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.open_time.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-20">
+                {{ form.trade_type.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.trade_type(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                {% if form.trade_type.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.trade_type.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-20">
+                {{ form.size.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.size(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                {% if form.size.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.size.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-20">
+                {{ form.item.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.item(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                {% if form.item.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.item.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-20">
+                {{ form.price.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.price(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                {% if form.price.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.price.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-20">
+                {{ form.s_l.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.s_l(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                {% if form.s_l.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.s_l.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-20">
+                {{ form.t_p.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.t_p(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                {% if form.t_p.errors %}
+                    <p class="text-red-500 w-20 text-xs italic">{{ form.t_p.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-20">
+                {{ form.close_time.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.close_time(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="YYYY-MM-DD HH:MM:SS") }}
+                {% if form.close_time.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.close_time.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-20">
+                {{ form.close_price.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.close_price(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                {% if form.close_price.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.close_price.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-20">
+                {{ form.comm.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.comm(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="0.00") }}
+                {% if form.comm.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.comm.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-20">
+                {{ form.taxes.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.taxes(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="0.00") }}
+                {% if form.taxes.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.taxes.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-20">
+                {{ form.swap.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.swap(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="0.00") }}
+                {% if form.swap.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.swap.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-4 mr-4 w-20">
+                {{ form.profit.label(class="block text-gray-700 text-sm mb-2") }}
+                {{ form.profit(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                {% if form.profit.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.profit.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div class="flex items-center justify-between w-full">
+                {{ form.submit(class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline") }}
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

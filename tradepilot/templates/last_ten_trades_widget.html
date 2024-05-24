@@ -1,0 +1,37 @@
+<section class="bg-white p-4 col-span-1">
+    <h3 class="text-lg font-bold mb-4">Last Ten Trades</h3>
+    <table class="table-auto w-full bg-white text-xs">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="px-2 py-1">Ticket</th>
+                <th class="px-2 py-1">Open Time</th>
+                <th class="px-2 py-1">Type</th>
+                <th class="px-2 py-1">Size</th>
+                <th class="px-2 py-1">Item</th>
+                <th class="px-2 py-1">Price</th>
+                <th class="px-2 py-1">S/L</th>
+                <th class="px-2 py-1">T/P</th>
+                <th class="px-2 py-1">Close Time</th>
+                <th class="px-2 py-1">Close Price</th>
+                <th class="px-2 py-1">Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trade in last_ten_trades %}
+            <tr>
+                <td class="border px-2 py-1">{{ trade.ticket }}</td>
+                <td class="border px-2 py-1">{{ trade.open_time }}</td>
+                <td class="border px-2 py-1 text-{{ 'green-500' if trade.trade_type == 'Buy' else 'red-500' }}">{{ trade.trade_type }}</td>
+                <td class="border px-2 py-1">{{ trade.size }}</td>
+                <td class="border px-2 py-1">{{ trade.item }}</td>
+                <td class="border px-2 py-1">{{ trade.price }}</td>
+                <td class="border px-2 py-1">{{ trade.s_l }}</td>
+                <td class="border px-2 py-1">{{ trade.t_p }}</td>
+                <td class="border px-2 py-1">{{ trade.close_time }}</td>
+                <td class="border px-2 py-1">{{ trade.close_price }}</td>
+                <td class="border px-2 py-1 text-green-500">{{ trade.profit }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>

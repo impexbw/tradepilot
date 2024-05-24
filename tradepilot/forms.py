@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, DateTimeField, IntegerField, DecimalField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange, Optional
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=50)])
@@ -29,3 +29,20 @@ class UserDataForm(FlaskForm):
     timeframes = StringField('Timeframes', validators=[DataRequired()])
     trades_per_day = IntegerField('Trades Per Day', validators=[DataRequired()])
     submit = SubmitField('Save')
+
+class TradeForm(FlaskForm):
+    ticket = StringField('Ticket', validators=[DataRequired()])
+    open_time = DateTimeField('Open Time', format='%Y-%m-%d %H:%M:%S', validators=[DataRequired()])
+    trade_type = StringField('Trade Type', validators=[DataRequired()])
+    size = DecimalField('Size', validators=[DataRequired(), NumberRange(min=0, max=1000000)], places=2)
+    item = StringField('Item', validators=[DataRequired()])
+    price = DecimalField('Price', validators=[DataRequired(), NumberRange(min=0, max=1000000)], places=2)
+    s_l = DecimalField('S / L', validators=[Optional(), NumberRange(min=0, max=1000000)], places=2)
+    t_p = DecimalField('T / P', validators=[Optional(), NumberRange(min=0, max=1000000)], places=2)
+    close_time = DateTimeField('Close Time', format='%Y-%m-%d %H:%M:%S', validators=[Optional()])
+    close_price = DecimalField('Close Price', validators=[Optional(), NumberRange(min=0, max=1000000)], places=2)
+    comm = DecimalField('Comm', validators=[Optional(), NumberRange(min=0, max=1000000)], places=2)
+    taxes = DecimalField('Taxes', validators=[Optional(), NumberRange(min=0, max=1000000)], places=2)
+    swap = DecimalField('Swap', validators=[Optional(), NumberRange(min=0, max=1000000)], places=2)
+    profit = DecimalField('Profit', validators=[DataRequired(), NumberRange(min=0, max=1000000)], places=2)
+    submit = SubmitField('Add Trade')
