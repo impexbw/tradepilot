@@ -44,5 +44,5 @@ class TradeForm(FlaskForm):
     comm = DecimalField('Comm', validators=[Optional(), NumberRange(min=0, max=1000000)], places=2)
     taxes = DecimalField('Taxes', validators=[Optional(), NumberRange(min=0, max=1000000)], places=2)
     swap = DecimalField('Swap', validators=[Optional(), NumberRange(min=0, max=1000000)], places=2)
-    profit = DecimalField('Profit', validators=[DataRequired(), NumberRange(min=0, max=1000000)], places=2)
+    profit = DecimalField('Profit', validators=[Optional()], places=2)
     submit = SubmitField('Add Trade')
