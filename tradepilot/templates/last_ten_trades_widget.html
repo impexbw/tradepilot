@@ -20,14 +20,14 @@
             {% for trade in last_ten_trades %}
             <tr>
                 <td class="border px-2 py-1">{{ trade.ticket }}</td>
-                <td class="border px-2 py-1">{{ trade.open_time }}</td>
+                <td class="border px-2 py-1">{{ trade.open_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                 <td class="border px-2 py-1 text-{{ 'green-500' if trade.trade_type == 'Buy' else 'red-500' }}">{{ trade.trade_type }}</td>
                 <td class="border px-2 py-1">{{ trade.size }}</td>
                 <td class="border px-2 py-1">{{ trade.item }}</td>
                 <td class="border px-2 py-1">{{ trade.price }}</td>
                 <td class="border px-2 py-1">{{ trade.s_l }}</td>
                 <td class="border px-2 py-1">{{ trade.t_p }}</td>
-                <td class="border px-2 py-1">{{ trade.close_time }}</td>
+                <td class="border px-2 py-1">{{ trade.close_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                 <td class="border px-2 py-1">{{ trade.close_price }}</td>
                 <td class="border px-2 py-1 text-{{ 'red-500' if trade.profit < 0 else 'green-500' }}">{{ trade.profit }}</td>
             </tr>

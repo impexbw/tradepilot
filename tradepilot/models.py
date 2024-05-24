@@ -41,7 +41,7 @@ class Trade(db.Model):
     price = db.Column(DECIMAL(10, 2), nullable=False)
     s_l = db.Column(DECIMAL(10, 2), nullable=False)
     t_p = db.Column(DECIMAL(10, 2), nullable=False)
-    close_time = db.Column(db.DateTime, nullable=False)
+    close_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     close_price = db.Column(DECIMAL(10, 2), nullable=False)
     comm = db.Column(DECIMAL(10, 2), nullable=False)
     taxes = db.Column(DECIMAL(10, 2), nullable=False)
