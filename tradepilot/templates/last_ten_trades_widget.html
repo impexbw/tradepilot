@@ -29,7 +29,7 @@
                 <td class="border px-2 py-1">{{ trade.t_p }}</td>
                 <td class="border px-2 py-1">{{ trade.close_time }}</td>
                 <td class="border px-2 py-1">{{ trade.close_price }}</td>
-                <td class="border px-2 py-1 text-green-500">{{ trade.profit }}</td>
+                <td class="border px-2 py-1 text-{{ 'red-500' if trade.profit < 0 else 'green-500' }}">{{ trade.profit }}</td>
             </tr>
             {% endfor %}
         </tbody>
