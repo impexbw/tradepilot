@@ -21,15 +21,15 @@
             <tr>
                 <td class="border px-2 py-1">{{ trade.ticket }}</td>
                 <td class="border px-2 py-1">{{ trade.open_time }}</td>
-                <td class="border px-2 py-1 text-{{ 'green-500' if trade.trade_type == 'Buy' else 'red-500' }}">{{ trade.trade_type }}</td>
-                <td class="border px-2 py-1">{{ trade.size }}</td>
+                <td class="border px-2 py-1 {% if trade.trade_type == 'Buy' %}text-green-500 font-bold{% else %}text-red-500 font-bold{% endif %}">{{ trade.trade_type }}</td>
+                <td class="border px-2 py-1 font-bold">{{ trade.size }}</td>
                 <td class="border px-2 py-1">{{ trade.item }}</td>
                 <td class="border px-2 py-1">{{ trade.price }}</td>
                 <td class="border px-2 py-1">{{ trade.s_l }}</td>
                 <td class="border px-2 py-1">{{ trade.t_p }}</td>
                 <td class="border px-2 py-1">{{ trade.close_time }}</td>
                 <td class="border px-2 py-1">{{ trade.close_price }}</td>
-                <td class="border px-2 py-1 text-{{ 'green-500' if trade.profit >= 0 else 'red-500' }}">{{ trade.profit }}</td>
+                <td class="border px-2 py-1 {% if trade.profit >= 0 %}text-green-500 font-bold{% else %}text-red-500 font-bold{% endif %}">{{ trade.profit }}</td>
             </tr>
             {% endfor %}
         </tbody>
