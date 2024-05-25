@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+from sqlalchemy import DECIMAL, Interval
 from sqlalchemy.dialects.mysql import DECIMAL
 from tradepilot import db, login_manager
 from flask_login import UserMixin
@@ -47,8 +48,37 @@ class Trade(db.Model):
     taxes = db.Column(DECIMAL(10, 2), nullable=False)
     swap = db.Column(DECIMAL(10, 2), nullable=False)
     profit = db.Column(DECIMAL(10, 2), nullable=False)
-    
-    def __repr__(self):
-        return f"Trade('{self.ticket}', '{self.open_time}', '{self.profit}')"
-    
-    taxes = db.Column(DECIMAL(10, 2), nullable=False)
+    pips = db.Column(DECIMAL(10, 2), nullable=True)
+    duration = db.Column(db.Interval, nullable=True)
+
+    def calculate_pips(self):
+        if self.trade_type.lower() == 'buy':
+            self.pips = self.close_price - self.price
+        else:
+            self.pips = self.price - self.close_price
+
+    def calculate_duration(self):
+        self.duration = self.close_time - self.open_time
+
+    @staticmethod
+    def create_trade(data):
+        trade = Trade(
+            user_id=data['user_id'],
+            ticket=data['ticket'],
+            open_time=data['open_time'],
+            close_time=data['close_time'],
+            trade_type=data['trade_type'],
+            size=data['size'],
+            item=data['item'],
+            price=data['price'],
+            s_l=data['s_l'],
+            t_p=data['t_p'],
+            close_price=data['close_price'],
+            comm=data['comm'],
+            taxes=data['taxes'],
+            swap=data['swap'],
+            profit=data['profit']
+        )
+        trade.calculate_pips()
+        trade.calculate_duration()
+        return trade

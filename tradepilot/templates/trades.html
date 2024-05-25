@@ -9,7 +9,7 @@
         {% include 'left_column.html' %}
         <main class="flex-1 bg-gray-50 p-6">
             <div class="container mx-auto p-6">
-                <h2 class="text-2xl font-bold mb-6">My Trades</h2>
+                <h2 class="text-2xl font-semibold mb-6">My Trades</h2>
                 
                 <!-- Date Filter Form -->
                 <form method="POST" class="mb-6">
@@ -39,26 +39,30 @@
                             <th class="px-2 py-1">Taxes</th>
                             <th class="px-2 py-1">Swap</th>
                             <th class="px-2 py-1">Profit</th>
+                            <th class="px-2 py-1">Pips</th>
+                            <th class="px-2 py-1">Duration</th>
                             <th class="px-2 py-1">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for trade in trades %}
                         <tr>
-                            <td class="border px-2 py-1">{{ trade.ticket }}</td>
-                            <td class="border px-2 py-1">{{ trade.open_time }}</td>
-                            <td class="border px-2 py-1 {% if trade.trade_type == 'Buy' %}text-green-500 font-bold{% else %}text-red-500 font-bold{% endif %}">{{ trade.trade_type }}</td>
-                            <td class="border px-2 py-1 font-bold">{{ trade.size }}</td>
-                            <td class="border px-2 py-1">{{ trade.item }}</td>
-                            <td class="border px-2 py-1">{{ trade.price }}</td>
-                            <td class="border px-2 py-1">{{ trade.s_l }}</td>
-                            <td class="border px-2 py-1">{{ trade.t_p }}</td>
-                            <td class="border px-2 py-1">{{ trade.close_time }}</td>
-                            <td class="border px-2 py-1">{{ trade.close_price }}</td>
-                            <td class="border px-2 py-1">{{ trade.comm }}</td>
-                            <td class="border px-2 py-1">{{ trade.taxes }}</td>
-                            <td class="border px-2 py-1">{{ trade.swap }}</td>
-                            <td class="border px-2 py-1 {% if trade.profit >= 0 %}text-green-500 font-bold{% else %}text-red-500 font-bold{% endif %}">{{ trade.profit }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.ticket }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.open_time }}</td>
+                            <td class="border px-2 py-1 {% if trade.trade_type == 'Buy' %}text-green-500 font-semibold{% else %}text-red-500 font-semibold{% endif %}">{{ trade.trade_type }}</td>
+                            <td class="border px-2 py-1 font-semibold">{{ trade.size }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.item }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.price }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.s_l }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.t_p }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.close_time }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.close_price }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.comm }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.taxes }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.swap }}</td>
+                            <td class="border px-2 py-1 {% if trade.profit >= 0 %}text-green-500 font-medium{% else %}text-red-500 font-medium{% endif %}">{{ trade.profit }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.pips }}</td>
+                            <td class="border px-2 py-1 font-medium">{{ trade.duration }}</td>
                             <td class="border px-2 py-1 flex items-center justify-center">
                                 <a href="{{ url_for('edit_trade', trade_id=trade.id) }}" class="text-yellow-500 px-2 py-1 rounded">
                                     <span class="material-icons">edit</span>

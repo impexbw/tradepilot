@@ -14,22 +14,26 @@
                 <th class="px-2 py-1">Close Time</th>
                 <th class="px-2 py-1">Close Price</th>
                 <th class="px-2 py-1">Profit</th>
+                <th class="px-2 py-1">Pips</th>
+                <th class="px-2 py-1">Duration</th>
             </tr>
         </thead>
         <tbody>
             {% for trade in last_ten_trades %}
             <tr>
-                <td class="border px-2 py-1">{{ trade.ticket }}</td>
-                <td class="border px-2 py-1">{{ trade.open_time }}</td>
-                <td class="border px-2 py-1 {% if trade.trade_type == 'Buy' %}text-green-500 font-bold{% else %}text-red-500 font-bold{% endif %}">{{ trade.trade_type }}</td>
-                <td class="border px-2 py-1 font-bold">{{ trade.size }}</td>
-                <td class="border px-2 py-1">{{ trade.item }}</td>
-                <td class="border px-2 py-1">{{ trade.price }}</td>
-                <td class="border px-2 py-1">{{ trade.s_l }}</td>
-                <td class="border px-2 py-1">{{ trade.t_p }}</td>
-                <td class="border px-2 py-1">{{ trade.close_time }}</td>
-                <td class="border px-2 py-1">{{ trade.close_price }}</td>
-                <td class="border px-2 py-1 {% if trade.profit >= 0 %}text-green-500 font-bold{% else %}text-red-500 font-bold{% endif %}">{{ trade.profit }}</td>
+                <td class="border px-2 py-1 font-medium">{{ trade.ticket }}</td>
+                <td class="border px-2 py-1 font-medium">{{ trade.open_time }}</td>
+                <td class="border px-2 py-1 {% if trade.trade_type == 'Buy' %}text-green-500 font-medium{% else %}text-red-500 font-medium{% endif %}">{{ trade.trade_type }}</td>
+                <td class="border px-2 py-1 font-medium">{{ trade.size }}</td>
+                <td class="border px-2 py-1 font-medium">{{ trade.item }}</td>
+                <td class="border px-2 py-1 font-medium">{{ trade.price }}</td>
+                <td class="border px-2 py-1 font-medium">{{ trade.s_l }}</td>
+                <td class="border px-2 py-1 font-medium">{{ trade.t_p }}</td>
+                <td class="border px-2 py-1 font-medium">{{ trade.close_time }}</td>
+                <td class="border px-2 py-1 font-medium">{{ trade.close_price }}</td>
+                <td class="border px-2 py-1 {% if trade.profit >= 0 %}text-green-500 font-medium{% else %}text-red-500 font-medium{% endif %}">{{ trade.profit }}</td>
+                <td class="border px-2 py-1 font-medium">{{ trade.pips }}</td>
+                <td class="border px-2 py-1 font-medium">{{ trade.duration }}</td>
             </tr>
             {% endfor %}
         </tbody>

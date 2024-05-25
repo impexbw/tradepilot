@@ -1,4 +1,5 @@
 from flask import render_template, url_for, flash, redirect, request
+from datetime import datetime
 from tradepilot import app, db, bcrypt
 from tradepilot.forms import RegistrationForm, LoginForm, UserDataForm, TradeForm
 from tradepilot.models import User, UserData, Trade
@@ -107,28 +108,30 @@ def calendar():
 def add_trade():
     form = TradeForm()
     if form.validate_on_submit():
-        trade = Trade(
-            user_id=current_user.id,
-            ticket=form.ticket.data,
-            open_time=form.open_time.data,
-            trade_type=form.trade_type.data,
-            size=form.size.data,
-            item=form.item.data,
-            price=form.price.data,
-            s_l=form.s_l.data,
-            t_p=form.t_p.data,
-            close_time=form.close_time.data,
-            close_price=form.close_price.data,
-            comm=form.comm.data,
-            taxes=form.taxes.data,
-            swap=form.swap.data,
-            profit=form.profit.data
-        )
-        db.session.add(trade)
+        data = {
+            'user_id': current_user.id,
+            'ticket': form.ticket.data,
+            'open_time': form.open_time.data,
+            'close_time': form.close_time.data,
+            'trade_type': form.trade_type.data,
+            'size': form.size.data,
+            'item': form.item.data,
+            'price': form.price.data,
+            's_l': form.s_l.data,
+            't_p': form.t_p.data,
+            'close_price': form.close_price.data,
+            'comm': form.comm.data,
+            'taxes': form.taxes.data,
+            'swap': form.swap.data,
+            'profit': form.profit.data
+        }
+        new_trade = Trade.create_trade(data)
+        db.session.add(new_trade)
         db.session.commit()
         flash('Your trade has been added!', 'success')
         return redirect(url_for('index'))
     return render_template('add_trade.html', title='Add Trade', form=form)
+
 
 @app.route('/edit_trade/<int:trade_id>', methods=['GET', 'POST'])
 @login_required
@@ -177,17 +180,21 @@ def trades():
         start_date = request.form.get('start_date')
         end_date = request.form.get('end_date')
         if start_date and end_date:
-            # Filter trades by date range
-            user_trades = Trade.query.filter_by(user_id=current_user.id).filter(
+            # Convert date strings to datetime objects
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+            # Filter trades by date range and sort by open_time in descending order
+            user_trades = Trade.query.filter(
+                Trade.user_id == current_user.id,
                 Trade.open_time >= start_date,
                 Trade.open_time <= end_date
-            ).all()
+            ).order_by(Trade.open_time.desc()).all()
         else:
-            # No date range provided, show all trades
-            user_trades = Trade.query.filter_by(user_id=current_user.id).all()
+            # No date range provided, show all trades and sort by open_time in descending order
+            user_trades = Trade.query.filter_by(user_id=current_user.id).order_by(Trade.open_time.desc()).all()
     else:
-        # Show all trades for the user
-        user_trades = Trade.query.filter_by(user_id=current_user.id).all()
+        # Show all trades for the user and sort by open_time in descending order
+        user_trades = Trade.query.filter_by(user_id=current_user.id).order_by(Trade.open_time.desc()).all()
     return render_template('trades.html', trades=user_trades, user_data=user_data)
 
 @app.context_processor
