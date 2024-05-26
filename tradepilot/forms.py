@@ -16,6 +16,10 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 class UserDataForm(FlaskForm):
+    broker_name = StringField('Broker Name', validators=[DataRequired()])
+    platform = SelectField('Platform', choices=[('MT4', 'MT4'), ('MT5', 'MT5'), ('DxTrade', 'DxTrade'), ('Ctrader', 'Ctrader')], validators=[DataRequired()])
+    equity = DecimalField('Equity', validators=[DataRequired(), NumberRange(min=0)], places=2)
+    balance = DecimalField('Balance', validators=[DataRequired(), NumberRange(min=0)], places=2)
     min_trading_days = IntegerField('Minimum Trading Days', validators=[DataRequired()])
     max_daily_loss = StringField('Max Daily Loss', validators=[DataRequired()])
     max_loss = StringField('Max Loss', validators=[DataRequired()])

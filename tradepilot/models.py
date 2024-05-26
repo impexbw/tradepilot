@@ -3,6 +3,7 @@ from sqlalchemy import DECIMAL, Interval
 from sqlalchemy.dialects.mysql import DECIMAL
 from tradepilot import db, login_manager
 from flask_login import UserMixin
+from flask_sqlalchemy import SQLAlchemy
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -18,6 +19,10 @@ class User(db.Model, UserMixin):
 class UserData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    broker_name = db.Column(db.String(100), nullable=False)
+    platform = db.Column(db.String(50), nullable=False)
+    equity = db.Column(db.Float, nullable=False, default=0.0)  # Change to Float
+    balance = db.Column(db.Float, nullable=False, default=0.0)  # Change to Float
     min_trading_days = db.Column(db.String(255))
     max_daily_loss = db.Column(db.String(255))
     max_loss = db.Column(db.String(255))
@@ -30,6 +35,12 @@ class UserData(db.Model):
     trading_strategy = db.Column(db.String(255))
     timeframes = db.Column(db.String(255))
     trades_per_day = db.Column(db.String(255))
+    last_update_date = db.Column(db.Date, nullable=False, server_default=db.func.current_date())
+
+    def reset_equity(self):
+        self.equity = self.balance
+        self.last_update_date = datetime.utcnow().date()
+        db.session.commit()
 
 class Trade(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,10 +1,14 @@
 <main class="w-full bg-gray-50 p-6">
-    <!-- <h1 class="text-2xl font-bold mb-4">Dashboard</h1> -->
-    <div class="grid grid-cols-1 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Statistics Section -->
+        {% include 'statistics.html' %}
+
+        <!-- Daily Summary Section -->
+        {% include 'daily_summary.html' %}
+    </div>
+
+    <!-- Last Ten Trades Widget -->
+    <div class="mt-6">
         {% include 'last_ten_trades_widget.html' %}
     </div>
 </main>
-
-
-
-

@@ -1,17 +1,133 @@
 from flask import render_template, url_for, flash, redirect, request
-from datetime import datetime
+from datetime import datetime, timedelta 
 from tradepilot import app, db, bcrypt
 from tradepilot.forms import RegistrationForm, LoginForm, UserDataForm, TradeForm
 from tradepilot.models import User, UserData, Trade
 from flask_login import login_user, current_user, logout_user, login_required
+from decimal import Decimal
+
+def update_equity_from_balance(user_data):
+    current_date = datetime.now().date()
+    if user_data.last_update_date != current_date:
+        user_data.equity = user_data.balance
+        user_data.last_update_date = current_date
+        db.session.commit()
+
+def calculate_equity_and_balance(user_data):
+    trades = Trade.query.filter_by(user_id=user_data.user_id).all()
+    total_profit = sum(Decimal(trade.profit) for trade in trades)
+    equity = Decimal(user_data.equity) + total_profit
+    return user_data.balance, float(equity)
+
+def calculate_max_drawdown(trades):
+    equity_curve = [0]  # Starting with zero for initial equity
+    for trade in trades:
+        equity_curve.append(equity_curve[-1] + float(trade.profit))
+    peak = equity_curve[0]
+    max_drawdown = 0
+    for value in equity_curve:
+        if value > peak:
+            peak = value
+        drawdown = peak - value
+        if drawdown > max_drawdown:
+            max_drawdown = drawdown
+    return max_drawdown
+
+def calculate_average_rrr(trades):
+    total_rrr = 0
+    count = 0
+    for trade in trades:
+        if trade.t_p and trade.s_l and trade.price:
+            rrr = abs(float(trade.t_p) - float(trade.price)) / abs(float(trade.s_l) - float(trade.price)) if trade.s_l != trade.price else 0
+            total_rrr += rrr
+            count += 1
+    return total_rrr / count if count > 0 else 0
+
+def calculate_expectancy(trades):
+    total_profit = sum(float(trade.profit) for trade in trades)
+    return total_profit / len(trades) if trades else 0
+
+def calculate_profit_factor(trades):
+    total_gains = sum(float(trade.profit) for trade in trades if trade.profit > 0)
+    total_losses = abs(sum(float(trade.profit) for trade in trades if trade.profit < 0))
+    return total_gains / total_losses if total_losses > 0 else 0
+
+def calculate_sharpe_ratio(trades, risk_free_rate=0.02):
+    returns = [float(trade.profit) for trade in trades]
+    avg_return = sum(returns) / len(returns) if returns else 0
+    std_dev = (sum([(x - avg_return) ** 2 for x in returns]) / len(returns)) ** 0.5 if returns else 1
+    return (avg_return - risk_free_rate) / std_dev if std_dev != 0 else 0
+
+def get_daily_summary(trades):
+    summary = {}
+    for trade in trades:
+        trade_date = trade.open_time.date()
+        if trade_date not in summary:
+            summary[trade_date] = {'trades': 0, 'lots': 0, 'result': 0}
+        summary[trade_date]['trades'] += 1
+        summary[trade_date]['lots'] += float(trade.size)
+        summary[trade_date]['result'] += float(trade.profit)
+    return [{'date': date, 'trades': data['trades'], 'lots': data['lots'], 'result': data['result']} for date, data in sorted(summary.items(), reverse=True)]
 
 @app.route('/')
 @app.route('/dashboard')
 @login_required
 def index():
     user_data = UserData.query.filter_by(user_id=current_user.id).first()
+    
+    # Update equity from balance at the start of a new day
+    update_equity_from_balance(user_data)
+    
     last_ten_trades = Trade.query.filter_by(user_id=current_user.id).order_by(Trade.open_time.desc()).limit(10).all()
-    return render_template('index.html', user_data=user_data, last_ten_trades=last_ten_trades)
+    trades = Trade.query.filter_by(user_id=current_user.id).all()
+
+    # Calculate statistics
+    total_trades = len(trades)
+    winning_trades = len([trade for trade in trades if trade.profit > 0])
+    losing_trades = len([trade for trade in trades if trade.profit <= 0])
+    win_rate = (winning_trades / total_trades * 100) if total_trades > 0 else 0
+    average_profit = sum(trade.profit for trade in trades if trade.profit > 0) / winning_trades if winning_trades > 0 else 0
+    average_loss = sum(trade.profit for trade in trades if trade.profit <= 0) / losing_trades if losing_trades > 0 else 0
+    net_profit = sum(trade.profit for trade in trades)
+    max_drawdown = calculate_max_drawdown(trades)
+    average_rrr = calculate_average_rrr(trades)
+    lots = sum(trade.size for trade in trades)
+    expectancy = calculate_expectancy(trades)
+    profit_factor = calculate_profit_factor(trades)
+    sharpe_ratio = calculate_sharpe_ratio(trades)
+
+    # Daily summary
+    daily_summaries = get_daily_summary(trades)
+
+    # Calculate dynamic balance and equity
+    balance, equity = calculate_equity_and_balance(user_data)
+
+    # Format the values
+    win_rate = f"{win_rate:.2f}%"
+    average_rrr = f"{average_rrr:.2f}"
+    expectancy = f"${expectancy:.2f}"
+    profit_factor = f"{profit_factor:.2f}"
+    sharpe_ratio = f"{sharpe_ratio:.2f}"
+
+    return render_template('index.html', 
+                           user_data=user_data, 
+                           last_ten_trades=last_ten_trades,
+                           total_trades=total_trades,
+                           winning_trades=winning_trades,
+                           losing_trades=losing_trades,
+                           win_rate=win_rate,
+                           average_profit=average_profit,
+                           average_loss=average_loss,
+                           net_profit=net_profit,
+                           max_drawdown=max_drawdown,
+                           average_rrr=average_rrr,
+                           lots=lots,
+                           expectancy=expectancy,
+                           profit_factor=profit_factor,
+                           sharpe_ratio=sharpe_ratio,
+                           daily_summaries=daily_summaries,
+                           equity=equity,  # Dynamic calculation
+                           balance=balance)  # Dynamic calculation
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -60,6 +176,10 @@ def edit():
         user_data = UserData(user_id=current_user.id)
     form = UserDataForm()
     if form.validate_on_submit():
+        user_data.broker_name = form.broker_name.data
+        user_data.platform = form.platform.data
+        user_data.equity = form.equity.data
+        user_data.balance = form.balance.data
         user_data.min_trading_days = form.min_trading_days.data
         user_data.max_daily_loss = form.max_daily_loss.data
         user_data.max_loss = form.max_loss.data
@@ -77,6 +197,10 @@ def edit():
         flash('Your data has been updated!', 'success')
         return redirect(url_for('index'))
     elif request.method == 'GET':
+        form.broker_name.data = user_data.broker_name
+        form.platform.data = user_data.platform
+        form.equity.data = user_data.equity
+        form.balance.data = user_data.balance
         form.min_trading_days.data = user_data.min_trading_days
         form.max_daily_loss.data = user_data.max_daily_loss
         form.max_loss.data = user_data.max_loss
@@ -108,30 +232,30 @@ def calendar():
 def add_trade():
     form = TradeForm()
     if form.validate_on_submit():
-        data = {
-            'user_id': current_user.id,
-            'ticket': form.ticket.data,
-            'open_time': form.open_time.data,
-            'close_time': form.close_time.data,
-            'trade_type': form.trade_type.data,
-            'size': form.size.data,
-            'item': form.item.data,
-            'price': form.price.data,
-            's_l': form.s_l.data,
-            't_p': form.t_p.data,
-            'close_price': form.close_price.data,
-            'comm': form.comm.data,
-            'taxes': form.taxes.data,
-            'swap': form.swap.data,
-            'profit': form.profit.data
-        }
-        new_trade = Trade.create_trade(data)
+        new_trade = Trade(
+            user_id=current_user.id,
+            ticket=form.ticket.data,
+            open_time=form.open_time.data,
+            close_time=form.close_time.data,
+            trade_type=form.trade_type.data,
+            size=form.size.data,
+            item=form.item.data,
+            price=form.price.data,
+            s_l=form.s_l.data,
+            t_p=form.t_p.data,
+            close_price=form.close_price.data,
+            comm=form.comm.data,
+            taxes=form.taxes.data,
+            swap=form.swap.data,
+            profit=form.profit.data
+        )
+        new_trade.calculate_pips()
+        new_trade.calculate_duration()
         db.session.add(new_trade)
         db.session.commit()
         flash('Your trade has been added!', 'success')
         return redirect(url_for('index'))
     return render_template('add_trade.html', title='Add Trade', form=form)
-
 
 @app.route('/edit_trade/<int:trade_id>', methods=['GET', 'POST'])
 @login_required
@@ -154,6 +278,11 @@ def edit_trade(trade_id):
         trade.taxes = form.taxes.data
         trade.swap = form.swap.data
         trade.profit = form.profit.data
+        
+        # Recalculate pips and duration
+        trade.calculate_pips()
+        trade.calculate_duration()
+        
         db.session.commit()
         flash('Your trade has been updated!', 'success')
         return redirect(url_for('trades'))
@@ -177,25 +306,31 @@ def trades():
     user_data = UserData.query.filter_by(user_id=current_user.id).first()
     if request.method == 'POST':
         # Get the date range from the form
-        start_date = request.form.get('start_date')
-        end_date = request.form.get('end_date')
-        if start_date and end_date:
+        start_date_str = request.form.get('start_date')
+        end_date_str = request.form.get('end_date')
+        ticket = request.form.get('ticket')
+        trade_type = request.form.get('trade_type')
+        
+        query = Trade.query.filter_by(user_id=current_user.id)
+        
+        if start_date_str and end_date_str:
             # Convert date strings to datetime objects
-            start_date = datetime.strptime(start_date, '%Y-%m-%d')
-            end_date = datetime.strptime(end_date, '%Y-%m-%d')
-            # Filter trades by date range and sort by open_time in descending order
-            user_trades = Trade.query.filter(
-                Trade.user_id == current_user.id,
-                Trade.open_time >= start_date,
-                Trade.open_time <= end_date
-            ).order_by(Trade.open_time.desc()).all()
-        else:
-            # No date range provided, show all trades and sort by open_time in descending order
-            user_trades = Trade.query.filter_by(user_id=current_user.id).order_by(Trade.open_time.desc()).all()
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d') + timedelta(days=1) - timedelta(seconds=1)
+            query = query.filter(Trade.open_time >= start_date, Trade.open_time <= end_date)
+        
+        if ticket:
+            query = query.filter(Trade.ticket.like(f'%{ticket}%'))
+        
+        if trade_type:
+            query = query.filter(Trade.trade_type.ilike(f'%{trade_type}%'))
+        
+        user_trades = query.order_by(Trade.open_time.desc()).all()
     else:
-        # Show all trades for the user and sort by open_time in descending order
         user_trades = Trade.query.filter_by(user_id=current_user.id).order_by(Trade.open_time.desc()).all()
+    
     return render_template('trades.html', trades=user_trades, user_data=user_data)
+
 
 @app.context_processor
 def inject_user_data():

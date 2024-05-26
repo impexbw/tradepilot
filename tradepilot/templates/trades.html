@@ -1,3 +1,15 @@
+{% macro format_duration(seconds) %}
+    {% if seconds is not none %}
+        {% set days = seconds // 86400 %}
+        {% set hours = (seconds % 86400) // 3600 %}
+        {% set minutes = (seconds % 3600) // 60 %}
+        {% set seconds = seconds % 60 %}
+        {{ days }} days, {{ '%02d' % hours }}:{{ '%02d' % minutes }}:{{ '%02d' % seconds }}
+    {% else %}
+        N/A
+    {% endif %}
+{% endmacro %}
+
 <!DOCTYPE html>
 <html lang="en">
 {% include 'head.html' %}
