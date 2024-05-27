@@ -23,6 +23,10 @@
                         .table-small {
                             font-size: 0.75rem;
                         }
+                        .error-message {
+                            color: red;
+                            font-size: 0.75rem;
+                        }
                     </style>
                     <table class="table-small w-full">
                         <tr>
@@ -59,7 +63,10 @@
                         </tr>
                         <tr>
                             <td>{{ form.close_time.label(class="block text-gray-700 text-sm mb-2") }}</td>
-                            <td>{{ form.close_time(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", placeholder="YYYY-MM-DD HH:MM:SS") }}</td>
+                            <td>
+                                {{ form.close_time(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", placeholder="YYYY-MM-DD HH:MM:SS") }}
+                                <p id="closeTimeError" class="error-message"></p>
+                            </td>
                         </tr>
                         <tr>
                             <td>{{ form.close_price.label(class="block text-gray-700 text-sm mb-2") }}</td>
@@ -117,6 +124,17 @@
             enableTime: true,
             dateFormat: "Y-m-d H:i:S",
         });
+
+        document.getElementById('tradeForm').addEventListener('submit', function (e) {
+            const openTime = document.querySelector("input[name='open_time']").value;
+            const closeTime = document.querySelector("input[name='close_time']").value;
+
+            if (closeTime && new Date(closeTime) <= new Date(openTime)) {
+                e.preventDefault();
+                document.getElementById('closeTimeError').textContent = 'Close Time must be after Open Time';
+            }
+        });
+
     </script>
 
     <script>

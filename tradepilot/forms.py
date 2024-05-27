@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, DateTimeField, IntegerField, DecimalField, SelectField, TextAreaField, FileField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange, Optional
+from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange, ValidationError, Optional
 from flask_wtf.file import FileField, FileAllowed
 
 
@@ -54,3 +54,7 @@ class TradeForm(FlaskForm):
     comments = TextAreaField('Comments', validators=[Optional()])
     strategy = StringField('Strategy', validators=[Optional()])
     submit = SubmitField('Add Trade')
+
+    def validate_close_time(form, field):
+        if field.data and field.data < form.open_time.data:
+            raise ValidationError('Close Time must be after Open Time')
