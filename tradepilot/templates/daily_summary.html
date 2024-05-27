@@ -1,8 +1,8 @@
 <section class="bg-white p-4 col-span-1 shadow-md rounded-lg border border-gray-300">
     <h3 class="text-lg font-bold mb-4">Daily Summary</h3>
-    <table class="table-auto w-full bg-white text-xs">
-        <thead>
-            <tr class="bg-gray-200">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
                 <th class="px-2 py-1">Date</th>
                 <th class="px-2 py-1">Trades</th>
                 <th class="px-2 py-1">Lots</th>
@@ -11,11 +11,11 @@
         </thead>
         <tbody>
             {% for summary in daily_summaries %}
-            <tr>
-                <td class="border px-2 py-1">{{ summary.date }}</td>
-                <td class="border px-2 py-1">{{ summary.trades }}</td>
-                <td class="border px-2 py-1">{{ summary.lots }}</td>
-                <td class="border px-2 py-1 {% if summary.result >= 0 %}text-green-500{% else %}text-red-500{% endif %}">${{ "%.2f"|format(summary.result) }}</td>
+            <tr class="text-xs bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-2 py-1">{{ summary.date }}</td>
+                <td class="px-2 py-1">{{ summary.trades }}</td>
+                <td class="px-2 py-1">{{ summary.lots }}</td>
+                <td class="px-2 py-1 {% if summary.result >= 0 %}text-green-500{% else %}text-red-500{% endif %}">${{ "%.2f"|format(summary.result) }}</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -25,18 +25,29 @@
                 
                 <!-- Date Filter Form -->
                 <form method="POST" class="mb-6">
-                    <div class="flex items-center">
-                        <label for="start_date" class="mr-2">Start Date:</label>
-                        <input type="date" id="start_date" name="start_date" class="border p-2 mr-4">
-                        <label for="end_date" class="mr-2">End Date:</label>
-                        <input type="date" id="end_date" name="end_date" class="border p-2 mr-4">
-                        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded">Filter</button>
-                    </div>
+                    <div date-rangepicker class="flex items-center">
+                        <div class="relative">
+                          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                               <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                              </svg>
+                          </div>
+                          <input name="start" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date start">
+                        </div>
+                        <span class="mx-4 text-gray-500">to</span>
+                        <div class="relative">
+                          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                               <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                              </svg>
+                          </div>
+                          <input name="end" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date end">
+                      </div>
+                      </div>
                 </form>
-
-                <table class="table-auto w-full bg-white shadow-lg text-xs">
-                    <thead>
-                        <tr class="bg-gray-200">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
                             <th class="px-2 py-1">Ticket</th>
                             <th class="px-2 py-1">Open Time</th>
                             <th class="px-2 py-1">Type</th>
@@ -58,24 +69,24 @@
                     </thead>
                     <tbody>
                         {% for trade in trades %}
-                        <tr>
-                            <td class="border px-2 py-1 font-medium">{{ trade.ticket }}</td>
-                            <td class="border px-2 py-1 font-medium">{{ trade.open_time }}</td>
-                            <td class="border px-2 py-1 {% if trade.trade_type == 'Buy' %}text-green-500 font-semibold{% else %}text-red-500 font-semibold{% endif %}">{{ trade.trade_type }}</td>
-                            <td class="border px-2 py-1 font-semibold">{{ trade.size }}</td>
-                            <td class="border px-2 py-1 font-medium">{{ trade.item }}</td>
-                            <td class="border px-2 py-1 font-medium">{{ trade.price }}</td>
-                            <td class="border px-2 py-1 font-medium">{{ trade.s_l }}</td>
-                            <td class="border px-2 py-1 font-medium">{{ trade.t_p }}</td>
-                            <td class="border px-2 py-1 font-medium">{{ trade.close_time }}</td>
-                            <td class="border px-2 py-1 font-medium">{{ trade.close_price }}</td>
-                            <td class="border px-2 py-1 font-medium">{{ trade.comm }}</td>
-                            <td class="border px-2 py-1 font-medium">{{ trade.taxes }}</td>
-                            <td class="border px-2 py-1 font-medium">{{ trade.swap }}</td>
-                            <td class="border px-2 py-1 {% if trade.profit >= 0 %}text-green-500 font-medium{% else %}text-red-500 font-medium{% endif %}">{{ trade.profit }}</td>
-                            <td class="border px-2 py-1 font-medium">{{ trade.pips }}</td>
-                            <td class="border px-2 py-1 font-medium">{{ trade.duration }}</td>
-                            <td class="border px-2 py-1 flex items-center justify-center">
+                        <tr class="text-xs bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td class="px-2 py-1">{{ trade.ticket }}</td>
+                            <td class="px-2 py-1">{{ trade.open_time }}</td>
+                            <td class="px-2 py-1 {% if trade.trade_type == 'Buy' %}text-green-500 {% else %}text-red-500 font-semibold{% endif %}">{{ trade.trade_type }}</td>
+                            <td class="px-2 py-1">{{ trade.size }}</td>
+                            <td class="px-2 py-1">{{ trade.item }}</td>
+                            <td class="px-2 py-1">{{ trade.price }}</td>
+                            <td class="px-2 py-1">{{ trade.s_l }}</td>
+                            <td class="px-2 py-1">{{ trade.t_p }}</td>
+                            <td class="px-2 py-1">{{ trade.close_time }}</td>
+                            <td class="px-2 py-1">{{ trade.close_price }}</td>
+                            <td class="px-2 py-1">{{ trade.comm }}</td>
+                            <td class="px-2 py-1">{{ trade.taxes }}</td>
+                            <td class="px-2 py-1">{{ trade.swap }}</td>
+                            <td class="px-2 py-1 {% if trade.profit >= 0 %}text-green-500 {% else %}text-red-500 font-medium{% endif %}">{{ trade.profit }}</td>
+                            <td class="px-2 py-1">{{ trade.pips }}</td>
+                            <td class="px-2 py-1">{{ trade.duration }}</td>
+                            <td class="px-2 py-1 flex items-center justify-center">
                                 <a href="{{ url_for('edit_trade', trade_id=trade.id) }}" class="text-yellow-500 px-2 py-1 rounded">
                                     <span class="material-icons">edit</span>
                                 </a>
