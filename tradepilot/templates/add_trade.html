@@ -8,7 +8,7 @@
     <div class="flex flex-col md:flex-row">
         {% include 'left_column.html' %}
         <main class="flex-1 bg-gray-50 p-6">
-            <div class="container mx-auto p-6">
+            <div class="container mx-auto p-6 shadow-md rounded-lg border border-gray-300">
                 <h2 class="text-2xl font-bold mb-6">Add New Trade</h2>
                 <form method="POST" action="{{ url_for('add_trade') }}" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}

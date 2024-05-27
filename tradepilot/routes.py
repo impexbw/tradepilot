@@ -315,6 +315,12 @@ def edit_trade(trade_id):
         return redirect(url_for('trades'))
     return render_template('edit_trade.html', title='Edit Trade', form=form, trade=trade)
 
+@app.route('/view_trade/<int:trade_id>', methods=['GET'])
+@login_required
+def view_trade(trade_id):
+    trade = Trade.query.get_or_404(trade_id)
+    return render_template('view_trade.html', title='View Trade', trade=trade)
+
 @app.route('/trade/delete/<int:trade_id>', methods=['POST'])
 @login_required
 def delete_trade(trade_id):
