@@ -10,7 +10,8 @@
         <main class="flex-1 bg-gray-50 p-6">
             <div class="container mx-auto p-6">
                 <h2 class="text-2xl font-bold mb-6">Edit Trade</h2>
-                <form method="POST" action="{{ url_for('edit_trade', trade_id=trade.id) }}" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <form method="POST" action="{{ url_for('edit_trade', trade_id=trade.id) }}" enctype="multipart/form-data" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    
                     {{ form.hidden_tag() }}
                     <style>
                         .w-15 {
@@ -82,6 +83,20 @@
                             <td>{{ form.profit(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small", step="0.01") }}</td>
                         </tr>
                         <tr>
+                            <td>{{ form.strategy.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.strategy(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.comments.label(class="block text-gray-700 text-sm mb-2") }}</td>
+                            <td>{{ form.comments(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline input-small") }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <label for="dropzoneFileUpload" class="block text-gray-700 text-sm mb-2">Screenshots</label>
+                                <div class="dropzone" id="dropzoneFileUpload"></div>
+                            </td>
+                        </tr>                     
+                        <tr>
                             <td colspan="2" class="text-right py-4">
                                 {{ form.submit(class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline", value="Save") }}
                             </td>
@@ -103,6 +118,45 @@
             enableSeconds: true,
             dateFormat: "Y-m-d H:i:S",
         });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+    <script>
+    Dropzone.autoDiscover = false;
+    var dropzone = new Dropzone("#dropzoneFileUpload", {
+        url: "{{ url_for('upload_file') }}",
+        maxFiles: 3,
+        maxFilesize: 3, // MB
+        acceptedFiles: "image/*",
+        addRemoveLinks: true,
+        success: function(file, response) {
+            console.log(response);
+            // Store the uploaded filenames in a hidden input or somewhere in your form for later use
+            var hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'uploaded_files[]';
+            hiddenInput.value = response.filename;
+            document.querySelector('form').appendChild(hiddenInput);
+        },
+        error: function(file, response) {
+            console.log(response);
+        },
+        init: function() {
+            // Load existing files for the trade being edited
+            var existingFiles = [
+                {% if trade.screenshot1 %} { name: "{{ trade.screenshot1 }}", size: 12345, url: "{{ url_for('static', filename='uploads/' ~ trade.screenshot1) }}" }, {% endif %}
+                {% if trade.screenshot2 %} { name: "{{ trade.screenshot2 }}", size: 12345, url: "{{ url_for('static', filename='uploads/' ~ trade.screenshot2) }}" }, {% endif %}
+                {% if trade.screenshot3 %} { name: "{{ trade.screenshot3 }}", size: 12345, url: "{{ url_for('static', filename='uploads/' ~ trade.screenshot3) }}" }, {% endif %}
+            ];
+
+            for (var i = 0; i < existingFiles.length; i++) {
+                var mockFile = existingFiles[i];
+                this.emit("addedfile", mockFile);
+                this.emit("thumbnail", mockFile, mockFile.url);
+                this.emit("complete", mockFile);
+            }
+        }
+    });
     </script>
 
 </body>

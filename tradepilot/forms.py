@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, DateTimeField, IntegerField, DecimalField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, DateTimeField, IntegerField, DecimalField, SelectField, TextAreaField, FileField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange, Optional
+from flask_wtf.file import FileField, FileAllowed
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=50)])
@@ -49,4 +51,6 @@ class TradeForm(FlaskForm):
     taxes = DecimalField('Taxes', default=0.00, validators=[Optional(), NumberRange(min=0, max=1000000)], places=2)
     swap = DecimalField('Swap', default=0.00, validators=[Optional(), NumberRange(min=0, max=1000000)], places=2)
     profit = DecimalField('Profit', validators=[Optional()], places=2)
+    comments = TextAreaField('Comments', validators=[Optional()])
+    strategy = StringField('Strategy', validators=[Optional()])
     submit = SubmitField('Add Trade')

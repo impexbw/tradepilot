@@ -1,10 +1,12 @@
-from flask import render_template, url_for, flash, redirect, request
+import os
+from flask import render_template, url_for, jsonify, flash, redirect, request
 from datetime import datetime, timedelta 
 from tradepilot import app, db, bcrypt
 from tradepilot.forms import RegistrationForm, LoginForm, UserDataForm, TradeForm
 from tradepilot.models import User, UserData, Trade
 from flask_login import login_user, current_user, logout_user, login_required
 from decimal import Decimal
+from werkzeug.utils import secure_filename
 
 def update_equity_from_balance(user_data):
     current_date = datetime.now().date()
@@ -227,11 +229,27 @@ def daily():
 def calendar():
     return render_template('calendar.html')
 
+@app.route('/upload_file', methods=['POST'])
+@login_required
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    if file:
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        return jsonify({'filename': filename}), 200
+    return jsonify({'error': 'File not allowed'}), 400
+
 @app.route('/add_trade', methods=['GET', 'POST'])
 @login_required
 def add_trade():
     form = TradeForm()
     if form.validate_on_submit():
+        uploaded_files = request.form.getlist('uploaded_files[]')
         new_trade = Trade(
             user_id=current_user.id,
             ticket=form.ticket.data,
@@ -247,7 +265,12 @@ def add_trade():
             comm=form.comm.data,
             taxes=form.taxes.data,
             swap=form.swap.data,
-            profit=form.profit.data
+            profit=form.profit.data,
+            comments=form.comments.data,
+            strategy=form.strategy.data,
+            screenshot1=uploaded_files[0] if len(uploaded_files) > 0 else None,
+            screenshot2=uploaded_files[1] if len(uploaded_files) > 1 else None,
+            screenshot3=uploaded_files[2] if len(uploaded_files) > 2 else None
         )
         new_trade.calculate_pips()
         new_trade.calculate_duration()
@@ -262,7 +285,6 @@ def add_trade():
 def edit_trade(trade_id):
     trade = Trade.query.get_or_404(trade_id)
     form = TradeForm(obj=trade)
-    
     if form.validate_on_submit():
         trade.ticket = form.ticket.data
         trade.open_time = form.open_time.data
@@ -278,15 +300,19 @@ def edit_trade(trade_id):
         trade.taxes = form.taxes.data
         trade.swap = form.swap.data
         trade.profit = form.profit.data
-        
-        # Recalculate pips and duration
+        trade.comments = form.comments.data
+        trade.strategy = form.strategy.data
+
+        uploaded_files = request.form.getlist('uploaded_files[]')
+        trade.screenshot1 = uploaded_files[0] if len(uploaded_files) > 0 else trade.screenshot1
+        trade.screenshot2 = uploaded_files[1] if len(uploaded_files) > 1 else trade.screenshot2
+        trade.screenshot3 = uploaded_files[2] if len(uploaded_files) > 2 else trade.screenshot3
+
         trade.calculate_pips()
         trade.calculate_duration()
-        
         db.session.commit()
         flash('Your trade has been updated!', 'success')
         return redirect(url_for('trades'))
-    
     return render_template('edit_trade.html', title='Edit Trade', form=form, trade=trade)
 
 @app.route('/trade/delete/<int:trade_id>', methods=['POST'])
@@ -330,7 +356,6 @@ def trades():
         user_trades = Trade.query.filter_by(user_id=current_user.id).order_by(Trade.open_time.desc()).all()
     
     return render_template('trades.html', trades=user_trades, user_data=user_data)
-
 
 @app.context_processor
 def inject_user_data():

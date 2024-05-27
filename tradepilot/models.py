@@ -61,6 +61,11 @@ class Trade(db.Model):
     profit = db.Column(DECIMAL(10, 2), nullable=False)
     pips = db.Column(DECIMAL(10, 2), nullable=True)
     duration = db.Column(db.Interval, nullable=True)
+    comments = db.Column(db.Text, nullable=True)
+    strategy = db.Column(db.String(255), nullable=True)
+    screenshot1 = db.Column(db.String(255), nullable=True)
+    screenshot2 = db.Column(db.String(255), nullable=True)
+    screenshot3 = db.Column(db.String(255), nullable=True)
 
     def calculate_pips(self):
         if self.trade_type.lower() == 'buy':
@@ -88,7 +93,12 @@ class Trade(db.Model):
             comm=data['comm'],
             taxes=data['taxes'],
             swap=data['swap'],
-            profit=data['profit']
+            profit=data['profit'],
+            comments=data.get('comments'),
+            strategy=data.get('strategy'),
+            screenshot1=data.get('screenshot1'),
+            screenshot2=data.get('screenshot2'),
+            screenshot3=data.get('screenshot3')
         )
         trade.calculate_pips()
         trade.calculate_duration()
