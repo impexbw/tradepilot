@@ -1,7 +1,7 @@
-<section class="bg-white p-4 col-span-1 shadow-md rounded-lg border border-gray-300">
-    <h3 class="text-lg font-bold mb-4">Last Ten Trades</h3>
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+<section class="text-gray-400 bg-gray-800 p-4 col-span-1 shadow-md rounded-lg border border-gray-700">
+    <h3 class="text-lg font-bold mb-4 leading-none text-white">Last Ten Trades</h3>
+    <table class="w-full text-sm text-left rtl:text-right text-gray-400">
+        <thead class="text-xs text-gray-400 uppercase">
             <tr>
                 <th class="px-2 py-1">Ticket</th>
                 <th class="px-2 py-1">Open Time</th>
@@ -20,7 +20,7 @@
         </thead>
         <tbody>
             {% for trade in last_ten_trades %}
-            <tr class="text-xs bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <tr class="text-xs border-gray-700">
                 <td class="px-2 py-1">{{ trade.ticket }}</td>
                 <td class="px-2 py-1">{{ trade.open_time }}</td>
                 <td class="px-2 py-1 {% if trade.trade_type == 'Buy' %}text-green-500 {% else %}text-red-500 {% endif %}">{{ trade.trade_type }}</td>

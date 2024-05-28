@@ -13,14 +13,14 @@
 <!DOCTYPE html>
 <html lang="en">
 {% include 'head.html' %}
-<body class="bg-gray-100">
+<body class="bg-gray-800">
 
     {% include 'header.html' %}
 
     <div class="flex flex-col md:flex-row">
         {% include 'left_column.html' %}
-        <main class="flex-1 bg-gray-50 p-6">
-            <div class="container mx-auto p-6 shadow-md rounded-lg border border-gray-300">
+        <main class="flex-1 bg-gray-900 p-6">
+            <div class="container mx-auto p-6 shadow-md rounded-lg border border-gray-700 text-gray-400 bg-gray-800">
                 <h2 class="text-2xl font-semibold mb-6">My Trades</h2>
                 
                 <!-- Date Filter Form -->
@@ -32,7 +32,7 @@
                                 <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                               </svg>
                           </div>
-                          <input name="start" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date start">
+                          <input name="start" type="text" class="bg-gray-800 border border-gray-700 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date start">
                         </div>
                         <span class="mx-4 text-gray-500">to</span>
                         <div class="relative">
@@ -41,12 +41,12 @@
                                 <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                               </svg>
                           </div>
-                          <input name="end" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date end">
+                          <input name="end" type="text" class="bg-gray-800 border border-gray-700 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date end">
                       </div>
                       </div>
                 </form>
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-400">
+                    <thead class="text-xs text-gray-400 uppercase">
                         <tr>
                             <th class="px-2 py-1">Ticket</th>
                             <th class="px-2 py-1">Open Time</th>
@@ -69,7 +69,7 @@
                     </thead>
                     <tbody>
                         {% for trade in trades %}
-                        <tr class="text-xs bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <tr class="text-xs border-b border-gray-700">
                             <td class="px-2 py-1">{{ trade.ticket }}</td>
                             <td class="px-2 py-1">{{ trade.open_time }}</td>
                             <td class="px-2 py-1 {% if trade.trade_type == 'Buy' %}text-green-500 {% else %}text-red-500 font-semibold{% endif %}">{{ trade.trade_type }}</td>

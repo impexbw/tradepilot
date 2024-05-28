@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 {% include 'head.html' %}
-<body class="bg-gray-100">
+<body class="bg-gray-800">
 
     {% include 'header.html' %}
 
     <div class="flex flex-col md:flex-row">
         {% include 'left_column.html' %}
-        <main class="flex-1 bg-gray-50 p-6">
-            <div class="container mx-auto p-6 shadow-md rounded-lg border border-gray-300">
-                <h2 class="text-2xl font-bold mb-6">Edit Trade</h2>
-                <form method="POST" action="{{ url_for('edit_trade', trade_id=trade.id) }}" enctype="multipart/form-data" class="bg-white px-8 pt-6 pb-8 mb-4">
+        <main class="flex-1 bg-gray-900 p-6">
+            <div class="container mx-auto p-6 shadow-md rounded-lg border border-gray-700 text-gray-400 bg-gray-800">
+                <h2 class="text-lg font-bold mb-4 leading-none text-white">Edit Trade</h2>
+                <form method="POST" action="{{ url_for('edit_trade', trade_id=trade.id) }}" enctype="multipart/form-data" class="text-gray-800 px-8 pt-6 pb-8 mb-4">
     
                     {{ form.hidden_tag() }}
                     <style>
@@ -27,73 +27,73 @@
                     </style>
                     <table class="table-small w-1/2">
                         <tr>
-                            <td>{{ form.ticket.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.ticket(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}</td>
+                            <td>{{ form.ticket.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.ticket(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.open_time.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.open_time(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", placeholder="YYYY-MM-DD HH:MM:SS") }}</td>
+                            <td>{{ form.open_time.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.open_time(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="YYYY-MM-DD HH:MM:SS") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.trade_type.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.trade_type(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}</td>
+                            <td>{{ form.trade_type.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.trade_type(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.size.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.size(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}</td>
+                            <td>{{ form.size.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.size(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.item.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.item(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}</td>
+                            <td>{{ form.item.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.item(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.price.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.price(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", step="0.01") }}</td>
+                            <td>{{ form.price.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.price(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", step="0.01") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.s_l.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.s_l(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", step="0.01") }}</td>
+                            <td>{{ form.s_l.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.s_l(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", step="0.01") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.t_p.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.t_p(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", step="0.01") }}</td>
+                            <td>{{ form.t_p.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.t_p(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", step="0.01") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.close_time.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.close_time(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", placeholder="YYYY-MM-DD HH:MM:SS") }}</td>
+                            <td>{{ form.close_time.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.close_time(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="YYYY-MM-DD HH:MM:SS") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.close_price.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.close_price(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", step="0.01") }}</td>
+                            <td>{{ form.close_price.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.close_price(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", step="0.01") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.comm.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.comm(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", placeholder="0.00", step="0.01") }}</td>
+                            <td>{{ form.comm.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.comm(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="0.00", step="0.01") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.taxes.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.taxes(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", placeholder="0.00", step="0.01") }}</td>
+                            <td>{{ form.taxes.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.taxes(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="0.00", step="0.01") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.swap.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.swap(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", placeholder="0.00", step="0.01") }}</td>
+                            <td>{{ form.swap.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.swap(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="0.00", step="0.01") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.profit.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.profit(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", step="0.01") }}</td>
+                            <td>{{ form.profit.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.profit(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", step="0.01") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.strategy.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.strategy(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}</td>
+                            <td>{{ form.strategy.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.strategy(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}</td>
                         </tr>
                         <tr>
-                            <td>{{ form.comments.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}</td>
-                            <td>{{ form.comments(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}</td>
+                            <td>{{ form.comments.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
+                            <td>{{ form.comments(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <label for="dropzoneFileUpload" class="block font-bold text-gray-700 text-sm mb-2">Screenshots</label>
-                                <div class="dropzone bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" id="dropzoneFileUpload"></div>
+                                <label for="dropzoneFileUpload" class="block mb-2 text-sm font-medium text-gray-400 mb-2">Screenshots</label>
+                                <div class="dropzone bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="dropzoneFileUpload"></div>
                             </td>
                         </tr>                     
                         <tr>

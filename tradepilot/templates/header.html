@@ -1,4 +1,4 @@
-<header class="bg-gray-900 text-white p-4 flex justify-between items-center">
+<header class="bg-gray-50 bg-gray-800 text-white p-4 flex justify-between items-center border border-gray-700">
     <div class="flex items-center">
         <!--<img src="https://via.placeholder.com/40" alt="Logo" class="mr-3">-->
         <a href="{{ url_for('index') }}" class="text-2xl text-white font-bold">tradePilot</a>
@@ -26,10 +26,10 @@
     </div>
 </header>
 
-<section class="py-2">
+<section class="py-2 border-b border-gray-700">
     <div class="container px-4 text-black flex justify-end items-center text-xs">
         <div style="width: 100%; position: relative; overflow: hidden;">
-            <iframe id="fx-widget" src="https://fxpricing.com/fx-widget/ticker-tape-widget.php?id=1,2,3,5,14,20&border=hide&speed=50&pair_weight=normal&click_target=blank&theme=light&tm-cr=FFFFFF&hr-cr=00000013&by-cr=28A745&sl-cr=DC3545&flags=hide&d_mode=compact-name&column=&lang=en&font=Arial, sans-serif" width="100%" height="85" style="border: unset;"></iframe>
+            <iframe id="fx-widget" src="https://fxpricing.com/fx-widget/ticker-tape-widget.php?id=1,2,3,5,14,20&border=hide&speed=50&pair_weight=normal&click_target=blank&theme=dark&tm-cr=1F2937&hr-cr=00000013&by-cr=28A745&sl-cr=DC3545&flags=hide&d_mode=compact-name&column=&lang=en&font=Arial, sans-serif" width="100%" height="85" style="border: unset;"></iframe>
             <div id="fx-pricing-widget-copyright" style="display: none;">
                 <span>Powered by </span><a href="https://fxpricing.com/" target="_blank">FX Pricing</a>
             </div>
@@ -52,7 +52,6 @@
             });
         </script>
         
-        {% include 'objective_breakdown.html' %}
     </div>
 </section>
 

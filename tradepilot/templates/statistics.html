@@ -1,27 +1,27 @@
-<section class="bg-white p-4 col-span-1 shadow-md rounded-lg border border-gray-300">
-    <h3 class="text-lg font-bold mb-4">Statistics</h3>
+<section class="text-gray-400 bg-gray-800 p-4 col-span-1 shadow-md rounded-lg border border-gray-700">
+    <h3 class="text-lg font-bold mb-4 leading-none text-white">Statistics</h3>
     <div class="flex flex-wrap">
         <!-- Left Column -->
         <div class="w-1/2 pr-2">
             <div class="mb-4">
                 <div class="text-sm font-semibold">Equity</div>
                 <div class="text-sm">${{ equity }}</div>
-                <hr class="my-2 border-gray-300">
+                <hr class="my-2 border-gray-700">
             </div>
             <div class="mb-4">
                 <div class="text-sm font-semibold">Balance</div>
                 <div class="text-sm">${{ balance }}</div>
-                <hr class="my-2 border-gray-300">
+                <hr class="my-2 border-gray-700">
             </div>
             <div class="mb-4">
                 <div class="text-sm font-semibold">No. of trades</div>
                 <div class="text-sm">{{ total_trades }}</div>
-                <hr class="my-2 border-gray-300">
+                <hr class="my-2 border-gray-700">
             </div>
             <div class="mb-4">
                 <div class="text-sm font-semibold">Lots</div>
                 <div class="text-sm">{{ lots }}</div>
-                <hr class="my-2 border-gray-300">
+                <hr class="my-2 border-gray-700">
             </div>
             <div class="mb-4">
                 <div class="text-sm font-semibold">Win rate</div>
@@ -33,22 +33,22 @@
             <div class="mb-4">
                 <div class="text-sm font-semibold">Average profit</div>
                 <div class="text-sm text-green-500">${{ "%.2f"|format(average_profit) }}</div>
-                <hr class="my-2 border-gray-300">
+                <hr class="my-2 border-gray-700">
             </div>
             <div class="mb-4">
                 <div class="text-sm font-semibold">Average loss</div>
                 <div class="text-sm text-red-500">${{ "%.2f"|format(average_loss) }}</div>
-                <hr class="my-2 border-gray-300">
+                <hr class="my-2 border-gray-700">
             </div>
             <div class="mb-4">
                 <div class="text-sm font-semibold">Average RRR</div>
                 <div class="text-sm">{{ average_rrr }}</div>
-                <hr class="my-2 border-gray-300">
+                <hr class="my-2 border-gray-700">
             </div>
             <div class="mb-4">
                 <div class="text-sm font-semibold">Expectancy</div>
                 <div class="text-sm">{{ expectancy }}</div>
-                <hr class="my-2 border-gray-300">
+                <hr class="my-2 border-gray-700">
             </div>
             <div class="mb-4">
                 <div class="text-sm font-semibold">Profit factor</div>

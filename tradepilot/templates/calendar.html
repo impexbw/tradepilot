@@ -1,29 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 {% include 'head.html' %}
-<body class="bg-gray-100">
+<body class="bg-gray-800">
 
     {% include 'header.html' %}
 
     <!-- Main Container -->
     <div class="flex">
         {% include 'left_column.html' %}
-        <main class="flex-1 bg-gray-50 p-6">
-            <div class="container mx-auto p-6 shadow-md rounded-lg p-6 mb-4 border border-gray-300">
-                <h2 class="text-2xl font-bold mb-6">Economic Calendar</h2>
-                <div id="economic-calendar-922462">
-                    <script type="text/javascript" src="https://www.cashbackforex.com/Content/remote/remote-calendar-widget.js"></script>
-                    <script type="text/javascript">
-                        RemoteCalendar({
-                            "DefaultTime": "today",
-                            "DefaultTheme": "plain",
-                            "Url":"https://www.cashbackforex.com",
-                            "SubPath":"economic-calendar",
-                            "IsShowEmbedButton":true,
-                            "ContainerId":"economic-calendar-922462"
-                        });
-                    </script>
-                </div>
+        <main class="flex-1 bg-gray-900 p-6">
+            <div class="container mx-auto p-6 shadow-md rounded-lg p-6 mb-4 border border-gray-700 text-gray-400 bg-gray-800">
+                <h2 class="text-lg font-bold mb-4 leading-none text-white">Economic Calendar</h2>
+                <div id="economic-calendar-965910"><script type="text/javascript" src="https://www.cashbackforex.com/Content/remote/remote-calendar-widget.js"></script><script type="text/javascript"> RemoteCalendar({"DefaultTime": "today","DefaultTheme": "dark","Url":"https://www.cashbackforex.com", "SubPath":"economic-calendar","IsShowEmbedButton":true,"DefaultCountries":"AE,AR,AT,AU,BE,BH,BR,CA,CH,CL,CN,CO,CY,CZ,DE,DK,EE,EG,ES,EU,FI,FR,GB,GR,HK,HR,HU,ID,IE,IL,IN,IS,IT,JO,JP,KR,LT,LV,MD,MK,MX,MY,NL,NO,NG,NZ,PE,PH,PL,PK,PT,QA,RO,RU,SA,SE,SG,SI,SK,TH,TR,TW,UA,US,VN,ZA,RS,UK,EMU","DefaultImpacts":"HIGH,MEDIUM,LOW,NONE","ContainerId":"economic-calendar-965910"});</script></div>
             </div>
         </main>
     </div>
