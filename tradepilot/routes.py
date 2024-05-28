@@ -363,6 +363,49 @@ def trades():
     
     return render_template('trades.html', trades=user_trades, user_data=user_data)
 
+@app.route('/delete_file', methods=['POST'])
+@login_required
+def delete_file():
+    data = request.get_json()
+    filename = data.get('filename')
+    trade_id = data.get('trade_id')
+    
+    if not filename or not trade_id:
+        app.logger.error('Invalid request: Missing filename or trade_id')
+        return jsonify({'error': 'Invalid request'}), 400
+
+    trade = Trade.query.get_or_404(trade_id)
+
+    # Ensure the current user owns the trade
+    if trade.user_id != current_user.id:
+        app.logger.error(f'User {current_user.id} does not own trade {trade_id}')
+        abort(403)
+
+    # Determine which screenshot field to clear
+    screenshot_field = None
+    if trade.screenshot1 == filename:
+        trade.screenshot1 = None
+    elif trade.screenshot2 == filename:
+        trade.screenshot2 = None
+    elif trade.screenshot3 == filename:
+        trade.screenshot3 = None
+    else:
+        app.logger.error(f'File {filename} not found in trade {trade_id}')
+        return jsonify({'error': 'File not found'}), 404
+
+    # Commit the changes to the database
+    db.session.commit()
+
+    # Remove the file from the filesystem
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        app.logger.info(f'File {filename} removed from filesystem')
+    else:
+        app.logger.error(f'File {filename} not found in filesystem')
+
+    return jsonify({'success': 'File deleted', 'screenshot_field': screenshot_field}), 200
+
 @app.context_processor
 def inject_user_data():
     if current_user.is_authenticated:

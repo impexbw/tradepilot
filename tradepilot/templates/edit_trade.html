@@ -120,7 +120,7 @@
         });
     </script>
 
-    <script>
+<script>
     Dropzone.autoDiscover = false;
     var dropzone = new Dropzone("#dropzoneFileUpload", {
         url: "{{ url_for('upload_file') }}",
@@ -128,20 +128,7 @@
         maxFilesize: 3, // MB
         acceptedFiles: "image/*",
         addRemoveLinks: true,
-        success: function(file, response) {
-            console.log(response);
-            // Store the uploaded filenames in a hidden input or somewhere in your form for later use
-            var hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.name = 'uploaded_files[]';
-            hiddenInput.value = response.filename;
-            document.querySelector('form').appendChild(hiddenInput);
-        },
-        error: function(file, response) {
-            console.log(response);
-        },
         init: function() {
-            // Load existing files for the trade being edited
             var existingFiles = [
                 {% if trade.screenshot1 %} { name: "{{ trade.screenshot1 }}", size: 12345, url: "{{ url_for('static', filename='uploads/' ~ trade.screenshot1) }}" }, {% endif %}
                 {% if trade.screenshot2 %} { name: "{{ trade.screenshot2 }}", size: 12345, url: "{{ url_for('static', filename='uploads/' ~ trade.screenshot2) }}" }, {% endif %}
@@ -153,10 +140,54 @@
                 this.emit("addedfile", mockFile);
                 this.emit("thumbnail", mockFile, mockFile.url);
                 this.emit("complete", mockFile);
+                mockFile.serverId = mockFile.name; // Set the serverId to match the filename
+                this.options.maxFiles = this.options.maxFiles - 1; // Decrement the maxFiles count initially
             }
+        },
+        success: function(file, response) {
+            console.log("File uploaded:", response);
+            // Store the uploaded filenames in a hidden input or somewhere in your form for later use
+            var hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'uploaded_files[]';
+            hiddenInput.value = response.filename;
+            document.querySelector('form').appendChild(hiddenInput);
+            file.serverId = response.filename; // Store the filename returned by the server
+        },
+        error: function(file, response) {
+            console.log("Upload error:", response);
+        },
+        removedfile: function(file) {
+            var filename = file.serverId; // Use the serverId set in the success function
+            console.log("Removing file:", filename);
+
+            // Send a request to the server to delete the file
+            fetch("{{ url_for('delete_file') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ filename: filename, trade_id: {{ trade.id }} }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("File deleted:", data);
+                // Optionally remove the hidden input corresponding to the file
+                var hiddenInputs = document.querySelectorAll('input[name="uploaded_files[]"]');
+                hiddenInputs.forEach(function(input) {
+                    if (input.value === filename) {
+                        input.remove();
+                    }
+                });
+                file.previewElement.remove(); // Only remove the preview element on success
+                dropzone.options.maxFiles = dropzone.options.maxFiles + 1; // Increment the maxFiles count so new files can be added
+            })
+            .catch(error => {
+                console.error("Deletion error:", error);
+            });
         }
     });
-    </script>
+</script>
 
 </body>
 </html>
