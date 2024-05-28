@@ -43,8 +43,6 @@ login_manager.login_view = 'login'
 migrate = Migrate(app, db)
 dropzone = Dropzone(app)
 
-from tradepilot.celery import make_celery
-
 celery = make_celery(app)
 
 from tradepilot import routes, models
