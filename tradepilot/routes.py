@@ -8,14 +8,16 @@ from flask_login import login_user, current_user, logout_user, login_required
 from decimal import Decimal
 from werkzeug.utils import secure_filename
 
-def update_equity_from_balance(user_data):
-    if not user_data:
-        app.logger.error('User data is None.')
-        return
+def update_equity_after_trade(user_data, profit):
+    if not isinstance(user_data.equity, Decimal):
+        user_data.equity = Decimal(user_data.equity)
+    user_data.equity += Decimal(profit)
+    db.session.commit()
 
+def update_balance_from_equity(user_data):
     current_date = datetime.now().date()
     if user_data.last_update_date != current_date:
-        user_data.equity = user_data.balance
+        user_data.balance = float(user_data.equity)
         user_data.last_update_date = current_date
         db.session.commit()
 
@@ -82,8 +84,8 @@ def index():
     user_data = UserData.query.filter_by(user_id=current_user.id).first()
     
     if user_data:
-        # Update equity from balance at the start of a new day
-        update_equity_from_balance(user_data)
+        # Update balance from equity at the start of a new day
+        update_balance_from_equity(user_data)
     
     last_ten_trades = Trade.query.filter_by(user_id=current_user.id).order_by(Trade.open_time.desc()).limit(10).all()
     trades = Trade.query.filter_by(user_id=current_user.id).all()
@@ -281,6 +283,12 @@ def add_trade():
         new_trade.calculate_duration()
         db.session.add(new_trade)
         db.session.commit()
+
+        # Update equity after adding a new trade
+        user_data = UserData.query.filter_by(user_id=current_user.id).first()
+        if user_data:
+            update_equity_after_trade(user_data, new_trade.profit)
+
         flash('Your trade has been added!', 'success')
         return redirect(url_for('index'))
     return render_template('add_trade.html', title='Add Trade', form=form)

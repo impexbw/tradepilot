@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_dropzone import Dropzone
+from .celery import make_celery
 
 app = Flask(__name__)
 app._static_folder = '../static'
@@ -24,11 +25,26 @@ upload_dir = app.config['UPLOAD_FOLDER']
 if not os.path.exists(upload_dir):
     os.makedirs(upload_dir)
 
+# Celery configuration with new settings
+app.config['broker_url'] = 'redis://localhost:6379/0'
+app.config['result_backend'] = 'redis://localhost:6379/0'
+app.config['imports'] = ('tradepilot.tasks',)
+app.config['beat_schedule'] = {
+    'update-equity-every-5-minutes': {
+        'task': 'tradepilot.tasks.update_all_users_balance',
+        'schedule': 300.0,  # Every 5 minutes
+    },
+}
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 migrate = Migrate(app, db)
 dropzone = Dropzone(app)
+
+from tradepilot.celery import make_celery
+
+celery = make_celery(app)
 
 from tradepilot import routes, models
