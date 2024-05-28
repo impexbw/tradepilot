@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 {% include 'head.html' %}
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
 
-    <div class="bg-white p-8 rounded shadow-md w-full max-w-sm">
+    <div class="p-8 rounded shadow-md w-full max-w-sm border border-gray-700 text-gray-400 bg-gray-800">
         <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
         <form method="POST" action="{{ url_for('login') }}">
             {{ form.hidden_tag() }}
             <div class="mb-4">
                 {{ form.email.label(class="block mb-2") }}
-                {{ form.email(class="w-full p-2 border border-gray-300 rounded") }}
+                {{ form.email(class="w-full bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
                 {% for error in form.email.errors %}
                     <span class="text-red-500">{{ error }}</span>
                 {% endfor %}
             </div>
             <div class="mb-4">
                 {{ form.password.label(class="block mb-2") }}
-                {{ form.password(class="w-full p-2 border border-gray-300 rounded") }}
+                {{ form.password(class="w-full bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
                 {% for error in form.password.errors %}
                     <span class="text-red-500">{{ error }}</span>
                 {% endfor %}
@@ -24,7 +24,7 @@
             <div class="mb-4">
                 {{ form.remember(class="mr-2") }} {{ form.remember.label() }}
             </div>
-            <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded w-full">Login</button>
+            <button type="submit" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 text-center w-full">Login</button>
         </form>
         <div class="mt-4 text-center">
             <a href="{{ url_for('register') }}" class="text-blue-600 hover:underline">Register</a>

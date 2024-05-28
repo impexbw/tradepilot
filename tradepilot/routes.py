@@ -9,6 +9,10 @@ from decimal import Decimal
 from werkzeug.utils import secure_filename
 
 def update_equity_from_balance(user_data):
+    if not user_data:
+        app.logger.error('User data is None.')
+        return
+
     current_date = datetime.now().date()
     if user_data.last_update_date != current_date:
         user_data.equity = user_data.balance
@@ -77,8 +81,9 @@ def get_daily_summary(trades):
 def index():
     user_data = UserData.query.filter_by(user_id=current_user.id).first()
     
-    # Update equity from balance at the start of a new day
-    update_equity_from_balance(user_data)
+    if user_data:
+        # Update equity from balance at the start of a new day
+        update_equity_from_balance(user_data)
     
     last_ten_trades = Trade.query.filter_by(user_id=current_user.id).order_by(Trade.open_time.desc()).limit(10).all()
     trades = Trade.query.filter_by(user_id=current_user.id).all()
@@ -102,7 +107,7 @@ def index():
     daily_summaries = get_daily_summary(trades)
 
     # Calculate dynamic balance and equity
-    balance, equity = calculate_equity_and_balance(user_data)
+    balance, equity = calculate_equity_and_balance(user_data) if user_data else (0, 0)
 
     # Format the values
     win_rate = f"{win_rate:.2f}%"
