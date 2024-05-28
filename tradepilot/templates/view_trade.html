@@ -77,17 +77,17 @@
                                     {% if trade.screenshot1 %}
                                         <img src="{{ url_for('static', filename='uploads/' ~ trade.screenshot1) }}" alt="Screenshot 1" class="w-1/3 h-auto cursor-pointer" onclick="openModal('{{ url_for('static', filename='uploads/' ~ trade.screenshot1) }}')">
                                     {% else %}
-                                        <p class="w-1/3 text-center">No Screenshot 1</p>
+                                        <p class="w-1/3 text-center"></p>
                                     {% endif %}
                                     {% if trade.screenshot2 %}
                                         <img src="{{ url_for('static', filename='uploads/' ~ trade.screenshot2) }}" alt="Screenshot 2" class="w-1/3 h-auto cursor-pointer" onclick="openModal('{{ url_for('static', filename='uploads/' ~ trade.screenshot2) }}')">
                                     {% else %}
-                                        <p class="w-1/3 text-center">No Screenshot 2</p>
+                                        <p class="w-1/3 text-center"></p>
                                     {% endif %}
                                     {% if trade.screenshot3 %}
                                         <img src="{{ url_for('static', filename='uploads/' ~ trade.screenshot3) }}" alt="Screenshot 3" class="w-1/3 h-auto cursor-pointer" onclick="openModal('{{ url_for('static', filename='uploads/' ~ trade.screenshot3) }}')">
                                     {% else %}
-                                        <p class="w-1/3 text-center">No Screenshot 3</p>
+                                        <p class="w-1/3 text-center"></p>
                                     {% endif %}
                                 </div>
                             </div>

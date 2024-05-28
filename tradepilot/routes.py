@@ -347,8 +347,8 @@ def trades():
         
         if start_date_str and end_date_str:
             # Convert date strings to datetime objects
-            start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
-            end_date = datetime.strptime(end_date_str, '%Y-%m-%d') + timedelta(days=1) - timedelta(seconds=1)
+            start_date = datetime.strptime(start_date_str, '%m/%d/%Y')
+            end_date = datetime.strptime(end_date_str, '%m/%d/%Y') + timedelta(days=1) - timedelta(seconds=1)
             query = query.filter(Trade.open_time >= start_date, Trade.open_time <= end_date)
         
         if ticket:

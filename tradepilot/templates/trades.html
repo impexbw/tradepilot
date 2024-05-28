@@ -1,15 +1,3 @@
-{% macro format_duration(seconds) %}
-    {% if seconds is not none %}
-        {% set days = seconds // 86400 %}
-        {% set hours = (seconds % 86400) // 3600 %}
-        {% set minutes = (seconds % 3600) // 60 %}
-        {% set seconds = seconds % 60 %}
-        {{ days }} days, {{ '%02d' % hours }}:{{ '%02d' % minutes }}:{{ '%02d' % seconds }}
-    {% else %}
-        N/A
-    {% endif %}
-{% endmacro %}
-
 <!DOCTYPE html>
 <html lang="en">
 {% include 'head.html' %}
@@ -32,7 +20,7 @@
                                 <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                               </svg>
                           </div>
-                          <input name="start" type="text" class="bg-gray-800 border border-gray-700 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date start">
+                          <input name="start_date" type="text" class="bg-gray-800 border border-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select start date" datepicker datepicker-autohide>
                         </div>
                         <span class="mx-4 text-gray-500">to</span>
                         <div class="relative">
@@ -41,8 +29,9 @@
                                 <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                               </svg>
                           </div>
-                          <input name="end" type="text" class="bg-gray-800 border border-gray-700 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date end">
-                      </div>
+                          <input name="end_date" type="text" class="bg-gray-800 border border-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select end date" datepicker datepicker-autohide>
+                        </div>
+                      <button type="submit" class="ml-4 block focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 text-center">Filter</button>
                       </div>
                 </form>
                 <table class="w-full text-sm text-left rtl:text-right text-gray-400">
@@ -88,14 +77,21 @@
                             <td class="px-2 py-1">{{ trade.duration }}</td>
                             <td class="px-2 py-1 flex items-center justify-center">
                                 <a href="{{ url_for('edit_trade', trade_id=trade.id) }}" class="text-yellow-500 px-2 py-1 rounded">
-                                    <span class="material-icons">edit</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-yellow-500">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l-2.35-2.35a1.5 1.5 0 0 0-2.122 0l-9 9a1.5 1.5 0 0 0-.293.47l-2 5a1.5 1.5 0 0 0 1.933 1.933l5-2a1.5 1.5 0 0 0 .47-.293l9-9a1.5 1.5 0 0 0 0-2.122z"/>
+                                    </svg>
                                 </a>
                                 <a href="{{ url_for('view_trade', trade_id=trade.id) }}" class="text-blue-500 px-2 py-1 rounded">
-                                    <span class="material-icons">visibility</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-blue-500">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12m-9 0a9 9 0 1 1 18 0a9 9 0 1 1 -18 0" />
+                                    </svg>
                                 </a>
                                 <form method="POST" action="{{ url_for('delete_trade', trade_id=trade.id) }}" onsubmit="return confirm('Are you sure you want to delete this trade?');">
                                     <button type="submit" class="text-red-600 px-2 py-1 rounded">
-                                        <span class="material-icons">delete</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-red-600">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.912 6.586a1.5 1.5 0 0 1 2.122 0l3.5 3.5a1.5 1.5 0 0 1 0 2.122l-10 10a1.5 1.5 0 0 1-.47.293l-5 2a1.5 1.5 0 0 1-1.933-1.933l2-5a1.5 1.5 0 0 1 .293-.47l10-10z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.587 12.414l7-7M13.41 3.59l-10.29 10.29a1.5 1.5 0 0 0-.293.47l-2 5a1.5 1.5 0 0 0 1.933 1.933l5-2a1.5 1.5 0 0 0 .47-.293l10.29-10.29z"/>
+                                        </svg>
                                     </button>
                                 </form>
                             </td>                 
@@ -106,5 +102,6 @@
             </div>
         </main>
     </div>
+    <script src="https://unpkg.com/flowbite@latest/dist/flowbite.min.js"></script>
 </body>
 </html>
