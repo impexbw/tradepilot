@@ -7,25 +7,47 @@ from tradepilot.models import User, UserData, Trade
 from flask_login import login_user, current_user, logout_user, login_required
 from decimal import Decimal
 from werkzeug.utils import secure_filename
+import logging
 
-def update_equity_after_trade(user_data, profit):
-    if not isinstance(user_data.equity, Decimal):
-        user_data.equity = Decimal(user_data.equity)
-    user_data.equity += Decimal(profit)
+def recalculate_equity(user_data):
+    """Recalculate equity based on all trades."""
+    trades = Trade.query.filter_by(user_id=user_data.user_id).all()
+    total_profit = sum(Decimal(trade.profit) for trade in trades)
+    user_data.equity = Decimal(user_data.balance) + total_profit
+    logging.debug(f"Recalculated equity: {user_data.equity}")
     db.session.commit()
 
-def update_balance_from_equity(user_data):
+def update_equity(user_data, profit_delta):
+    """Update user equity based on profit delta."""
+    if not isinstance(user_data.equity, Decimal):
+        user_data.equity = Decimal(user_data.equity)
+    user_data.equity += Decimal(profit_delta)
+    logging.debug(f"Updated equity: {user_data.equity}")
+    db.session.commit()
+
+def sync_balance_from_equity(user_data):
+    """Update user balance from equity at the start of a new day."""
     current_date = datetime.now().date()
     if user_data.last_update_date != current_date:
-        user_data.balance = float(user_data.equity)
+        user_data.balance = user_data.equity
         user_data.last_update_date = current_date
+        logging.debug(f"Updated balance: {user_data.balance} on {current_date}")
         db.session.commit()
+
+def handle_trade_update(user_data, old_profit, new_profit):
+    """Handle trade update, adjusting equity accordingly."""
+    profit_delta = Decimal(new_profit) - Decimal(old_profit)
+    update_equity(user_data, profit_delta)
+
+def handle_trade_removal(user_data, trade_profit):
+    """Handle trade removal, adjusting equity accordingly."""
+    update_equity(user_data, -Decimal(trade_profit))
 
 def calculate_equity_and_balance(user_data):
     trades = Trade.query.filter_by(user_id=user_data.user_id).all()
     total_profit = sum(Decimal(trade.profit) for trade in trades)
-    equity = Decimal(user_data.equity) + total_profit
-    return user_data.balance, float(equity)
+    equity = Decimal(user_data.balance) + total_profit
+    return Decimal(user_data.balance), equity
 
 def calculate_max_drawdown(trades):
     equity_curve = [0]  # Starting with zero for initial equity
@@ -85,7 +107,10 @@ def index():
     
     if user_data:
         # Update balance from equity at the start of a new day
-        update_balance_from_equity(user_data)
+        sync_balance_from_equity(user_data)
+        # Initial sync if equity has not been calculated yet
+        if user_data.equity is None:
+            recalculate_equity(user_data)
     
     last_ten_trades = Trade.query.filter_by(user_id=current_user.id).order_by(Trade.open_time.desc()).limit(10).all()
     trades = Trade.query.filter_by(user_id=current_user.id).all()
@@ -109,7 +134,7 @@ def index():
     daily_summaries = get_daily_summary(trades)
 
     # Calculate dynamic balance and equity
-    balance, equity = calculate_equity_and_balance(user_data) if user_data else (0, 0)
+    balance, equity = calculate_equity_and_balance(user_data) if user_data else (Decimal(0), Decimal(0))
 
     # Format the values
     win_rate = f"{win_rate:.2f}%"
@@ -161,6 +186,12 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password_hash, form.password.data):
             login_user(user, remember=form.remember.data)
+
+            # Recalculate equity for the user on login
+            user_data = UserData.query.filter_by(user_id=user.id).first()
+            if user_data:
+                recalculate_equity(user_data)
+
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('index'))
         else:
@@ -287,7 +318,8 @@ def add_trade():
         # Update equity after adding a new trade
         user_data = UserData.query.filter_by(user_id=current_user.id).first()
         if user_data:
-            update_equity_after_trade(user_data, new_trade.profit)
+            update_equity(user_data, new_trade.profit)
+            sync_balance_from_equity(user_data)  # Sync balance if necessary
 
         flash('Your trade has been added!', 'success')
         return redirect(url_for('index'))
@@ -324,6 +356,13 @@ def edit_trade(trade_id):
         trade.calculate_pips()
         trade.calculate_duration()
         db.session.commit()
+
+        # Update equity after editing a trade
+        user_data = UserData.query.filter_by(user_id=current_user.id).first()
+        if user_data:
+            handle_trade_update(user_data, old_profit, trade.profit)
+            sync_balance_from_equity(user_data)  # Sync balance if necessary
+
         flash('Your trade has been updated!', 'success')
         return redirect(url_for('trades'))
     return render_template('edit_trade.html', title='Edit Trade', form=form, trade=trade)
@@ -340,6 +379,11 @@ def delete_trade(trade_id):
     trade = Trade.query.get_or_404(trade_id)
     if trade.user_id != current_user.id:
         abort(403)
+
+    user_data = UserData.query.filter_by(user_id=current_user.id).first()
+    if user_data:
+        handle_trade_removal(user_data, trade.profit)
+
     db.session.delete(trade)
     db.session.commit()
     flash('Your trade has been deleted!', 'success')
