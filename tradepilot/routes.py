@@ -7,48 +7,46 @@ from tradepilot.models import User, UserData, Trade
 from flask_login import login_user, current_user, logout_user, login_required
 from decimal import Decimal
 from werkzeug.utils import secure_filename
-import logging
 
+# Recalculate equity based on all trades.
 def recalculate_equity(user_data):
-    """Recalculate equity based on all trades."""
     trades = Trade.query.filter_by(user_id=user_data.user_id).all()
     total_profit = sum(Decimal(trade.profit) for trade in trades)
     user_data.equity = Decimal(user_data.balance) + total_profit
-    logging.debug(f"Recalculated equity: {user_data.equity}")
     db.session.commit()
 
+# Update user equity based on profit delta.
 def update_equity(user_data, profit_delta):
-    """Update user equity based on profit delta."""
     if not isinstance(user_data.equity, Decimal):
         user_data.equity = Decimal(user_data.equity)
     user_data.equity += Decimal(profit_delta)
-    logging.debug(f"Updated equity: {user_data.equity}")
     db.session.commit()
 
+# Update user balance from equity at the start of a new day.
 def sync_balance_from_equity(user_data):
-    """Update user balance from equity at the start of a new day."""
     current_date = datetime.now().date()
     if user_data.last_update_date != current_date:
         user_data.balance = user_data.equity
         user_data.last_update_date = current_date
-        logging.debug(f"Updated balance: {user_data.balance} on {current_date}")
         db.session.commit()
 
+# Handle trade update, adjusting equity accordingly.
 def handle_trade_update(user_data, old_profit, new_profit):
-    """Handle trade update, adjusting equity accordingly."""
     profit_delta = Decimal(new_profit) - Decimal(old_profit)
     update_equity(user_data, profit_delta)
 
+# Handle trade removal, adjusting equity accordingly.
 def handle_trade_removal(user_data, trade_profit):
-    """Handle trade removal, adjusting equity accordingly."""
     update_equity(user_data, -Decimal(trade_profit))
 
+# Calculate dynamic balance and equity.
 def calculate_equity_and_balance(user_data):
     trades = Trade.query.filter_by(user_id=user_data.user_id).all()
     total_profit = sum(Decimal(trade.profit) for trade in trades)
     equity = Decimal(user_data.balance) + total_profit
     return Decimal(user_data.balance), equity
 
+# Calculate maximum drawdown.
 def calculate_max_drawdown(trades):
     equity_curve = [0]  # Starting with zero for initial equity
     for trade in trades:
@@ -63,6 +61,7 @@ def calculate_max_drawdown(trades):
             max_drawdown = drawdown
     return max_drawdown
 
+# Calculate average risk-reward ratio (RRR).
 def calculate_average_rrr(trades):
     total_rrr = 0
     count = 0
@@ -73,21 +72,25 @@ def calculate_average_rrr(trades):
             count += 1
     return total_rrr / count if count > 0 else 0
 
+# Calculate expectancy.
 def calculate_expectancy(trades):
     total_profit = sum(float(trade.profit) for trade in trades)
     return total_profit / len(trades) if trades else 0
 
+# Calculate profit factor.
 def calculate_profit_factor(trades):
     total_gains = sum(float(trade.profit) for trade in trades if trade.profit > 0)
     total_losses = abs(sum(float(trade.profit) for trade in trades if trade.profit < 0))
     return total_gains / total_losses if total_losses > 0 else 0
 
+# Calculate Sharpe ratio.
 def calculate_sharpe_ratio(trades, risk_free_rate=0.02):
     returns = [float(trade.profit) for trade in trades]
     avg_return = sum(returns) / len(returns) if returns else 0
     std_dev = (sum([(x - avg_return) ** 2 for x in returns]) / len(returns)) ** 0.5 if returns else 1
     return (avg_return - risk_free_rate) / std_dev if std_dev != 0 else 0
 
+# Generate daily summary.
 def get_daily_summary(trades):
     summary = {}
     for trade in trades:
@@ -255,7 +258,6 @@ def edit():
         form.trades_per_day.data = user_data.trades_per_day
     return render_template('edit.html', form=form, user_data=user_data)
 
-
 @app.route('/daily')
 @login_required
 def daily():
@@ -336,6 +338,8 @@ def edit_trade(trade_id):
     trade = Trade.query.get_or_404(trade_id)
     form = TradeForm(obj=trade)
     if form.validate_on_submit():
+        old_profit = trade.profit  # Store old profit before updating
+
         trade.ticket = form.ticket.data
         trade.open_time = form.open_time.data
         trade.trade_type = form.trade_type.data
