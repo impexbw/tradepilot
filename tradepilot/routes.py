@@ -285,6 +285,11 @@ def upload_file():
 @app.route('/add_trade', methods=['GET', 'POST'])
 @login_required
 def add_trade():
+    user_data = UserData.query.filter_by(user_id=current_user.id).first()
+    if not user_data or user_data.balance is None or user_data.equity is None:
+        flash('Please set your balance and equity before adding a trade.', 'warning')
+        return redirect(url_for('edit'))  # Redirect to the edit page where the flash message will be shown
+
     form = TradeForm()
     if form.validate_on_submit():
         uploaded_files = request.form.getlist('uploaded_files[]')

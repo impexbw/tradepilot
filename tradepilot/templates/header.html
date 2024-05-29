@@ -1,4 +1,4 @@
-<header class="bg-gray-50 bg-gray-800 text-white p-4 flex justify-between items-center border border-gray-700">
+<header class="bg-gray-50 bg-gray-800 text-white p-4 flex justify-between items-center border border-gray-700 relative">
     <div class="flex items-center">
         <!--<img src="https://via.placeholder.com/40" alt="Logo" class="mr-3">-->
         <a href="{{ url_for('index') }}" class="text-2xl text-white font-bold">tradePilot</a>
@@ -12,7 +12,25 @@
             <a href="#" class="text-gray-300 hover:text-white">Playbook</a>
         </nav>
     </div>
-    <div class="flex items-center">
+    <div class="flex items-center relative">
+        <!-- Flash Messages -->
+        <div class="absolute top-0 right-0 mt-4 z-50 flash-messages-container"> <!-- Removed fixed width -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="bg-{{ 'blue' if category == 'info' else 'green' if category == 'success' else 'yellow' if category == 'warning' else 'red' }}-100 border border-{{ 'blue' if category == 'info' else 'green' if category == 'success' else 'yellow' if category == 'warning' else 'red' }}-400 text-{{ 'blue' if category == 'info' else 'green' if category == 'success' else 'yellow' if category == 'warning' else 'red' }}-700 px-4 py-3 rounded relative mb-4 inline-block"> <!-- Ensure inline-block for horizontal display -->
+                            <span class="block sm:inline mr-8">{{ message }}</span>
+                            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                <svg class="fill-current h-6 w-6 text-{{ 'blue' if category == 'info' else 'green' if category == 'success' else 'yellow' if category == 'warning' else 'red' }}-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" onclick="this.parentElement.parentElement.style.display='none';">
+                                    <title>Close</title>
+                                    <path d="M14.348 5.652a1 1 0 010 1.414L11.414 10l2.934 2.934a1 1 0 01-1.414 1.414L10 11.414l-2.934 2.934a1 1 0 01-1.414-1.414L8.586 10 5.652 7.066a1 1 0 011.414-1.414L10 8.586l2.934-2.934a1 1 0 011.414 0z"/>
+                                </svg>
+                            </span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
         <span class="mr-4 hidden md:inline">Hello, {{ current_user.username }}</span>
         <button id="user-menu-toggle" class="focus:outline-none hidden md:block">
             <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">M</div>
@@ -81,3 +99,26 @@ document.getElementById('mobile-menu-toggle').addEventListener('click', function
     menu.classList.toggle('hidden');
 });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(function () {
+            let flashMessages = document.querySelectorAll('.flash-messages-container > div');
+            flashMessages.forEach(message => message.style.display = 'none');
+        }, 5000);  // Adjust the timeout as needed (5000ms = 5 seconds)
+    });
+</script>
+
+<style>
+.flash-messages-container {
+    width: 500px; /* Adjusted width for desktop devices */
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    .flash-messages-container {
+        width: 200px; /* Adjusted width for mobile devices */
+    }
+}
+</style>
