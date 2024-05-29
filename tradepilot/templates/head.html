@@ -17,4 +17,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .dropzone .dz-preview .dz-image {
+            background-color: #1F2937; 
+            border-radius: 0px !important;
+            overflow: hidden !important;
+            width: 120px !important;
+            height: 120px !important;
+            position: relative !important;
+            display: block !important;
+            z-index: 10 !important;
+        }
+        .dz-remove {
+            background-color: #1F2937;  
+        }
+        .dropzone .dz-filename {
+            display: none !important;
+        }
+    </style>
 </head>
