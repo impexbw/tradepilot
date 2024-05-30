@@ -33,9 +33,16 @@
         </div>
         <span class="mr-4 hidden md:inline">Hello, {{ current_user.username }}</span>
         <button id="user-menu-toggle" class="focus:outline-none hidden md:block">
-            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">M</div>
+            <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-5xl">
+                {% if current_user.mood %}
+                    {{ current_user.mood }}
+                {% else %}
+                    M
+                {% endif %}
+            </div>
         </button>
         <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20">
+            <a href="{{ url_for('profile') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">My Profile</a>
             <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Log out</a>
         </div>
         <button id="mobile-menu-toggle" class="focus:outline-none ml-4 md:hidden">

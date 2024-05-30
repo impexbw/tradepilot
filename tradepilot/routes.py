@@ -2,11 +2,12 @@ import os
 from flask import render_template, url_for, jsonify, flash, redirect, request
 from datetime import datetime, timedelta 
 from tradepilot import app, db, bcrypt
-from tradepilot.forms import RegistrationForm, LoginForm, UserDataForm, TradeForm
+from tradepilot.forms import RegistrationForm, LoginForm, UserDataForm, UpdateProfileForm, TradeForm
 from tradepilot.models import User, UserData, Trade
 from flask_login import login_user, current_user, logout_user, login_required
 from decimal import Decimal
 from werkzeug.utils import secure_filename
+from flask_login import current_user, login_required
 
 # Recalculate equity based on all trades.
 def recalculate_equity(user_data):
@@ -200,6 +201,27 @@ def login():
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
+
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.full_name = form.full_name.data
+        current_user.email = form.email.data
+        current_user.mood = form.mood.data
+        if form.password.data:
+            current_user.password_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        db.session.commit()
+        flash('Your profile has been updated!', 'success')
+        return redirect(url_for('profile'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.full_name.data = current_user.full_name
+        form.email.data = current_user.email
+        form.mood.data = current_user.mood
+    return render_template('profile.html', form=form)
 
 @app.route('/logout')
 def logout():
@@ -476,5 +498,5 @@ def delete_file():
 def inject_user_data():
     if current_user.is_authenticated:
         user_data = UserData.query.filter_by(user_id=current_user.id).first()
-        return dict(user_data=user_data)
-    return dict(user_data=None)
+        return dict(user_data=user_data, current_user=current_user)
+    return dict(user_data=None, current_user=None)

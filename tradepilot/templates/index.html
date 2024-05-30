@@ -10,5 +10,35 @@
             <!-- {% include 'right_column.html' %} -->
         </div>
     </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const moodIcon = document.getElementById('mood-icon');
+        const moods = {
+            'happy': '😊',
+            'sad': '😢',
+            'neutral': '😐',
+            'angry': '😡',
+            'excited': '😃'
+        };
+    
+        // Function to update mood icon
+        function updateMoodIcon(mood) {
+            moodIcon.textContent = moods[mood] || 'M';
+        }
+    
+        // Initial mood icon update
+        const initialMood = moodIcon.getAttribute('data-mood');
+        updateMoodIcon(initialMood);
+    
+        // Listen for changes in the mood select field on the profile page
+        const moodSelect = document.querySelector('select[name="mood"]');
+        if (moodSelect) {
+            moodSelect.addEventListener('change', function() {
+                const selectedMood = moodSelect.value;
+                updateMoodIcon(selectedMood);
+            });
+        }
+    });
+</script>    
 </body>
 </html>

@@ -19,3 +19,12 @@ strong {
 .checklist input[type="checkbox"] {
     margin-right: 10px;
 }
+
+.text-5xl {
+    font-size: 3rem; /* Adjust as needed */
+}
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
