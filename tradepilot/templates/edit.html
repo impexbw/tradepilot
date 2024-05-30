@@ -16,58 +16,58 @@
                         <div>
                             <h3 class="text-md mb-2">Account Details</h3>
                             <label for="broker_name" class="block mb-1 text-sm font-medium text-gray-400">Broker Name:</label>
-                            {{ form.broker_name(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.broker_name(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="FTMO") }}
                             
                             <label for="platform" class="block mb-1 text-sm font-medium text-gray-400">Platform:</label>
-                            {{ form.platform(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.platform(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="MT4") }}
                             
                             <label for="equity" class="block mb-1 text-sm font-medium text-gray-400">Equity:</label>
-                            {{ form.equity(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.equity(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="25000,00") }}
                             
                             <label for="balance" class="block mb-1 text-sm font-medium text-gray-400">Balance:</label>
-                            {{ form.balance(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.balance(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="25000,00") }}
                         </div>
                         
                         <div>
                             <h3 class="text-md mb-2">Objective Breakdown</h3>
                             <label for="min_trading_days" class="block mb-1 text-sm font-medium text-gray-400">Minimum Trading Days:</label>
-                            {{ form.min_trading_days(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.min_trading_days(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="5") }}
                             
                             <label for="max_daily_loss" class="block mb-1 text-sm font-medium text-gray-400">Max Daily Loss:</label>
-                            {{ form.max_daily_loss(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.max_daily_loss(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="$1,290") }}
                             
                             <label for="max_loss" class="block mb-1 text-sm font-medium text-gray-400">Max Loss:</label>
-                            {{ form.max_loss(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.max_loss(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="$2,500") }}
                             
                             <label for="profit_target" class="block mb-1 text-sm font-medium text-gray-400">Profit Target:</label>
-                            {{ form.profit_target(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.profit_target(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="$1,250") }}
                         </div>
                         
                         <div>
                             <h3 class="text-md mb-2 invisible">Placeholder</h3>
                             <label for="instrument" class="block mb-1 text-sm font-medium text-gray-400">Instrument:</label>
-                            {{ form.instrument(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.instrument(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="NASDAQ (NAS100)") }}
                             
                             <label for="trading_session" class="block mb-1 text-sm font-medium text-gray-400">Trading Session:</label>
-                            {{ form.trading_session(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.trading_session(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="New York session") }}
                             
                             <label for="risk_reward" class="block mb-1 text-sm font-medium text-gray-400">Risk-Reward Ratio:</label>
-                            {{ form.risk_reward(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.risk_reward(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="1:2") }}
                             
                             <label for="daily_max_loss" class="block mb-1 text-sm font-medium text-gray-400">Daily Max Loss:</label>
-                            {{ form.daily_max_loss(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.daily_max_loss(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="5%") }}
                             
                             <label for="consecutive_losers" class="block mb-1 text-sm font-medium text-gray-400">Consecutive Losers Limit:</label>
-                            {{ form.consecutive_losers(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.consecutive_losers(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="4") }}
                             
                             <label for="trading_strategy" class="block mb-1 text-sm font-medium text-gray-400">Trading Strategy:</label>
-                            {{ form.trading_strategy(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.trading_strategy(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="Support and resistance, pullbacks") }}
                             
                             <label for="timeframes" class="block mb-1 text-sm font-medium text-gray-400">Timeframes:</label>
-                            {{ form.timeframes(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.timeframes(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="1h, 15m, 5m") }}
                             
                             <label for="trades_per_day" class="block mb-1 text-sm font-medium text-gray-400">Trades Per Day:</label>
-                            {{ form.trades_per_day(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            {{ form.trades_per_day(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="8") }}
                         </div>
                     </div>
                     <div class="flex justify-end mt-4">
