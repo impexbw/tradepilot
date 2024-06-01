@@ -53,6 +53,12 @@
                         <a href="{{ url_for('edit') }}" class="text-blue-500 hover:underline">Edit</a>
                     </div>
                 </div>
+                <div class="flex justify-end mt-8 items-center space-x-2">
+                    <span class="text-white">Reset all data:</span>
+                    <form method="POST" action="{{ url_for('reset') }}" onsubmit="return confirm('Are you sure you want to reset all data? This action cannot be undone.');">
+                        <button type="submit" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Reset</button>
+                    </form>
+                </div>
             </div>
         </main>
     </div>

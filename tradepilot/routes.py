@@ -494,6 +494,39 @@ def delete_file():
 
     return jsonify({'success': 'File deleted', 'screenshot_field': screenshot_field}), 200
 
+@app.route('/reset', methods=['POST'])
+@login_required
+def reset():
+    user_data = UserData.query.filter_by(user_id=current_user.id).first()
+    if user_data:
+        # Reset user data fields
+        user_data.broker_name = ''
+        user_data.platform = ''
+        user_data.equity = 0.0
+        user_data.balance = 0.0
+        user_data.min_trading_days = None
+        user_data.max_daily_loss = None
+        user_data.max_loss = None
+        user_data.profit_target = None
+        user_data.instrument = ''
+        user_data.trading_session = ''
+        user_data.risk_reward = ''
+        user_data.daily_max_loss = ''
+        user_data.consecutive_losers = None
+        user_data.trading_strategy = ''
+        user_data.timeframes = ''
+        user_data.trades_per_day = None
+        db.session.commit()
+
+        # Delete all trades for the user
+        Trade.query.filter_by(user_id=current_user.id).delete()
+        db.session.commit()
+
+        flash('All data have been reset to default.', 'success')
+    else:
+        flash('No account details found to reset.', 'warning')
+    return redirect(url_for('profile'))
+
 @app.context_processor
 def inject_user_data():
     if current_user.is_authenticated:
