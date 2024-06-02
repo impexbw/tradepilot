@@ -172,8 +172,8 @@ def index():
                            profit_factor=profit_factor,
                            sharpe_ratio=sharpe_ratio,
                            daily_summaries=daily_summaries,
-                           equity=equity,  # Use database value
-                           balance=balance)  # Use database value
+                           equity=f"{equity:.2f}",  # Format to 2 decimal places
+                           balance=f"{balance:.2f}")  # Format to 2 decimal places
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -583,19 +583,6 @@ def delete_item(item_id):
     db.session.commit()
     flash('Checklist item deleted', 'success')
     return redirect(url_for('checklist_settings'))
-
-@app.route('/manual_update', methods=['POST'])
-@login_required
-def manual_update():
-    user_data = UserData.query.filter_by(user_id=current_user.id).first()
-    if user_data:
-        logging.debug(f"Before sync_balance_from_equity - User Data: ID = {user_data.user_id}, Balance = {user_data.balance}, Equity = {user_data.equity}, Last Update Date = {user_data.last_update_date}")
-        sync_balance_from_equity(user_data)
-        logging.debug(f"After sync_balance_from_equity - User Data: ID = {user_data.user_id}, Balance = {user_data.balance}, Equity = {user_data.equity}, Last Update Date = {user_data.last_update_date}")
-        flash('Balance and Equity have been manually updated.', 'success')
-    else:
-        flash('User data not found.', 'danger')
-    return redirect(url_for('profile'))
 
 @app.context_processor
 def inject_user_data():
