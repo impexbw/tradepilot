@@ -14,14 +14,14 @@ def recalculate_equity(user_data):
     trades = Trade.query.filter_by(user_id=user_data.user_id).all()
     total_profit = sum(Decimal(trade.profit) for trade in trades)
     user_data.equity = Decimal(user_data.balance) + total_profit
-    db.session.commit()
+    # db.session.commit() # Remove commit from here
 
 # Update user equity based on profit delta.
 def update_equity(user_data, profit_delta):
     if not isinstance(user_data.equity, Decimal):
         user_data.equity = Decimal(user_data.equity)
     user_data.equity += Decimal(profit_delta)
-    db.session.commit()
+    # db.session.commit() # Remove commit from here
 
 # Update user balance from equity at the start of a new day.
 def sync_balance_from_equity(user_data):
@@ -29,7 +29,7 @@ def sync_balance_from_equity(user_data):
     if user_data.last_update_date != current_date:
         user_data.balance = user_data.equity
         user_data.last_update_date = current_date
-        db.session.commit()
+        # db.session.commit() # Remove commit from here
 
 # Handle trade update, adjusting equity accordingly.
 def handle_trade_update(user_data, old_profit, new_profit):
@@ -115,6 +115,7 @@ def index():
         # Initial sync if equity has not been calculated yet
         if user_data.equity is None:
             recalculate_equity(user_data)
+        db.session.commit()  # Commit changes after all updates
     
     last_ten_trades = Trade.query.filter_by(user_id=current_user.id).order_by(Trade.open_time.desc()).limit(10).all()
     trades = Trade.query.filter_by(user_id=current_user.id).all()
@@ -195,6 +196,7 @@ def login():
             user_data = UserData.query.filter_by(user_id=user.id).first()
             if user_data:
                 recalculate_equity(user_data)
+                db.session.commit()  # Commit changes after recalculating equity
 
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('index'))
@@ -276,7 +278,7 @@ def edit():
         form.daily_max_loss.data = user_data.daily_max_loss
         form.consecutive_losers.data = user_data.consecutive_losers
         form.trading_strategy.data = user_data.trading_strategy
-        form.timeframes.data = user_data.timeframes
+        form.timeframes.data = form.timeframes.data
         form.trades_per_day.data = user_data.trades_per_day
     return render_template('edit.html', form=form, user_data=user_data)
 
@@ -349,6 +351,7 @@ def add_trade():
         if user_data:
             update_equity(user_data, new_trade.profit)
             sync_balance_from_equity(user_data)  # Sync balance if necessary
+            db.session.commit()  # Commit changes after updating equity
 
         flash('Your trade has been added!', 'success')
         return redirect(url_for('index'))
@@ -393,6 +396,7 @@ def edit_trade(trade_id):
         if user_data:
             handle_trade_update(user_data, old_profit, trade.profit)
             sync_balance_from_equity(user_data)  # Sync balance if necessary
+            db.session.commit()  # Commit changes after updating equity
 
         flash('Your trade has been updated!', 'success')
         return redirect(url_for('trades'))

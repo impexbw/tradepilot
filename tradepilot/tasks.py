@@ -10,7 +10,7 @@ def update_all_users_balance():
         try:
             app.logger.info(f'Updating user {user_data.user_id}')
             update_balance_from_equity(user_data)
-            db.session.commit()
+            db.session.commit()  # Commit changes after updating all users
         except Exception as e:
             db.session.rollback()
             app.logger.error(f'Error updating user {user_data.user_id}: {e}')
@@ -21,4 +21,4 @@ def update_balance_from_equity(user_data):
     if user_data.last_update_date != current_date:
         user_data.balance = user_data.equity
         user_data.last_update_date = current_date
-        db.session.commit()
+        # db.session.commit()  # Remove commit from here
