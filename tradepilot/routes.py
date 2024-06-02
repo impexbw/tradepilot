@@ -1,35 +1,52 @@
 import os
 from flask import abort, render_template, url_for, jsonify, flash, redirect, request
-from datetime import datetime, timedelta 
+from datetime import datetime, timedelta
 from tradepilot import app, db, bcrypt
-from tradepilot.forms import RegistrationForm, LoginForm, UserDataForm, UpdateProfileForm, TradeForm, CategoryForm, CategoryForm, ItemForm
+from tradepilot.forms import RegistrationForm, LoginForm, UserDataForm, UpdateProfileForm, TradeForm, CategoryForm, ItemForm
 from tradepilot.models import ChecklistCategory, ChecklistItem, User, UserData, Trade
 from flask_login import login_user, current_user, logout_user, login_required
 from decimal import Decimal
 from werkzeug.utils import secure_filename
-from flask_login import current_user, login_required
+import logging
+
+# Setup logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Helper function to log the state of user_data
+def log_user_data_state(user_data, context):
+    logging.debug(f"{context} - User Data: ID = {user_data.user_id}, Balance = {user_data.balance}, Equity = {user_data.equity}, Last Update Date = {user_data.last_update_date}")
 
 # Recalculate equity based on all trades.
 def recalculate_equity(user_data):
     trades = Trade.query.filter_by(user_id=user_data.user_id).all()
     total_profit = sum(Decimal(trade.profit) for trade in trades)
     user_data.equity = Decimal(user_data.balance) + total_profit
-    # db.session.commit() # Remove commit from here
+    log_user_data_state(user_data, "After recalculate_equity")
+    logging.debug(f"Recalculate equity: Total Profit = {total_profit}, New Equity = {user_data.equity}")
+    db.session.commit()
 
 # Update user equity based on profit delta.
 def update_equity(user_data, profit_delta):
     if not isinstance(user_data.equity, Decimal):
         user_data.equity = Decimal(user_data.equity)
     user_data.equity += Decimal(profit_delta)
-    # db.session.commit() # Remove commit from here
+    log_user_data_state(user_data, "After update_equity")
+    logging.debug(f"Update equity: Profit Delta = {profit_delta}, New Equity = {user_data.equity}")
+    db.session.commit()
 
-# Update user balance from equity at the start of a new day.
 def sync_balance_from_equity(user_data):
-    current_date = datetime.now().date()
-    if user_data.last_update_date != current_date:
+    try:
+        logging.debug(f"Sync balance from equity: Old Balance = {user_data.balance}, Equity = {user_data.equity}")
         user_data.balance = user_data.equity
-        user_data.last_update_date = current_date
-        # db.session.commit() # Remove commit from here
+        user_data.last_update_date = datetime.now().date()
+        db.session.commit()
+        logging.debug(f"New Balance = {user_data.balance}, Last Update Date = {user_data.last_update_date}")
+
+        db.session.refresh(user_data)
+        logging.debug(f"Verified Balance in DB = {user_data.balance}, Verified Equity in DB = {user_data.equity}")
+    except Exception as e:
+        logging.error(f"Error syncing balance from equity: {e}")
+        db.session.rollback()
 
 # Handle trade update, adjusting equity accordingly.
 def handle_trade_update(user_data, old_profit, new_profit):
@@ -39,13 +56,6 @@ def handle_trade_update(user_data, old_profit, new_profit):
 # Handle trade removal, adjusting equity accordingly.
 def handle_trade_removal(user_data, trade_profit):
     update_equity(user_data, -Decimal(trade_profit))
-
-# Calculate dynamic balance and equity.
-def calculate_equity_and_balance(user_data):
-    trades = Trade.query.filter_by(user_id=user_data.user_id).all()
-    total_profit = sum(Decimal(trade.profit) for trade in trades)
-    equity = Decimal(user_data.balance) + total_profit
-    return Decimal(user_data.balance), equity
 
 # Calculate maximum drawdown.
 def calculate_max_drawdown(trades):
@@ -108,15 +118,11 @@ def get_daily_summary(trades):
 @login_required
 def index():
     user_data = UserData.query.filter_by(user_id=current_user.id).first()
-    
+
     if user_data:
-        # Update balance from equity at the start of a new day
+        # Ensure balance is updated from equity at the start of a new day
         sync_balance_from_equity(user_data)
-        # Initial sync if equity has not been calculated yet
-        if user_data.equity is None:
-            recalculate_equity(user_data)
-        db.session.commit()  # Commit changes after all updates
-    
+
     last_ten_trades = Trade.query.filter_by(user_id=current_user.id).order_by(Trade.open_time.desc()).limit(10).all()
     trades = Trade.query.filter_by(user_id=current_user.id).all()
 
@@ -138,8 +144,9 @@ def index():
     # Daily summary
     daily_summaries = get_daily_summary(trades)
 
-    # Calculate dynamic balance and equity
-    balance, equity = calculate_equity_and_balance(user_data) if user_data else (Decimal(0), Decimal(0))
+    # Use database values for balance and equity
+    balance = user_data.balance if user_data else Decimal(0)
+    equity = user_data.equity if user_data else Decimal(0)
 
     # Format the values
     win_rate = f"{win_rate:.2f}%"
@@ -148,8 +155,8 @@ def index():
     profit_factor = f"{profit_factor:.2f}"
     sharpe_ratio = f"{sharpe_ratio:.2f}"
 
-    return render_template('index.html', 
-                           user_data=user_data, 
+    return render_template('index.html',
+                           user_data=user_data,
                            last_ten_trades=last_ten_trades,
                            total_trades=total_trades,
                            winning_trades=winning_trades,
@@ -165,8 +172,9 @@ def index():
                            profit_factor=profit_factor,
                            sharpe_ratio=sharpe_ratio,
                            daily_summaries=daily_summaries,
-                           equity=equity,  # Dynamic calculation
-                           balance=balance)  # Dynamic calculation
+                           equity=equity,  # Use database value
+                           balance=balance)  # Use database value
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -196,7 +204,6 @@ def login():
             user_data = UserData.query.filter_by(user_id=user.id).first()
             if user_data:
                 recalculate_equity(user_data)
-                db.session.commit()  # Commit changes after recalculating equity
 
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('index'))
@@ -347,11 +354,8 @@ def add_trade():
         db.session.commit()
 
         # Update equity after adding a new trade
-        user_data = UserData.query.filter_by(user_id=current_user.id).first()
-        if user_data:
-            update_equity(user_data, new_trade.profit)
-            sync_balance_from_equity(user_data)  # Sync balance if necessary
-            db.session.commit()  # Commit changes after updating equity
+        update_equity(user_data, new_trade.profit)
+        db.session.commit()  # Commit changes after updating equity
 
         flash('Your trade has been added!', 'success')
         return redirect(url_for('index'))
@@ -395,7 +399,6 @@ def edit_trade(trade_id):
         user_data = UserData.query.filter_by(user_id=current_user.id).first()
         if user_data:
             handle_trade_update(user_data, old_profit, trade.profit)
-            sync_balance_from_equity(user_data)  # Sync balance if necessary
             db.session.commit()  # Commit changes after updating equity
 
         flash('Your trade has been updated!', 'success')
@@ -418,6 +421,7 @@ def delete_trade(trade_id):
     user_data = UserData.query.filter_by(user_id=current_user.id).first()
     if user_data:
         handle_trade_removal(user_data, trade.profit)
+        db.session.commit()  # Commit changes after updating equity
 
     db.session.delete(trade)
     db.session.commit()
@@ -434,25 +438,25 @@ def trades():
         end_date_str = request.form.get('end_date')
         ticket = request.form.get('ticket')
         trade_type = request.form.get('trade_type')
-        
+
         query = Trade.query.filter_by(user_id=current_user.id)
-        
+
         if start_date_str and end_date_str:
             # Convert date strings to datetime objects
             start_date = datetime.strptime(start_date_str, '%m/%d/%Y')
             end_date = datetime.strptime(end_date_str, '%m/%d/%Y') + timedelta(days=1) - timedelta(seconds=1)
             query = query.filter(Trade.open_time >= start_date, Trade.open_time <= end_date)
-        
+
         if ticket:
             query = query.filter(Trade.ticket.like(f'%{ticket}%'))
-        
+
         if trade_type:
             query = query.filter(Trade.trade_type.ilike(f'%{trade_type}%'))
-        
+
         user_trades = query.order_by(Trade.open_time.desc()).all()
     else:
         user_trades = Trade.query.filter_by(user_id=current_user.id).order_by(Trade.open_time.desc()).all()
-    
+
     return render_template('trades.html', trades=user_trades, user_data=user_data)
 
 @app.route('/delete_file', methods=['POST'])
@@ -461,7 +465,7 @@ def delete_file():
     data = request.get_json()
     filename = data.get('filename')
     trade_id = data.get('trade_id')
-    
+
     if not filename or not trade_id:
         app.logger.error('Invalid request: Missing filename or trade_id')
         return jsonify({'error': 'Invalid request'}), 400
@@ -579,6 +583,19 @@ def delete_item(item_id):
     db.session.commit()
     flash('Checklist item deleted', 'success')
     return redirect(url_for('checklist_settings'))
+
+@app.route('/manual_update', methods=['POST'])
+@login_required
+def manual_update():
+    user_data = UserData.query.filter_by(user_id=current_user.id).first()
+    if user_data:
+        logging.debug(f"Before sync_balance_from_equity - User Data: ID = {user_data.user_id}, Balance = {user_data.balance}, Equity = {user_data.equity}, Last Update Date = {user_data.last_update_date}")
+        sync_balance_from_equity(user_data)
+        logging.debug(f"After sync_balance_from_equity - User Data: ID = {user_data.user_id}, Balance = {user_data.balance}, Equity = {user_data.equity}, Last Update Date = {user_data.last_update_date}")
+        flash('Balance and Equity have been manually updated.', 'success')
+    else:
+        flash('User data not found.', 'danger')
+    return redirect(url_for('profile'))
 
 @app.context_processor
 def inject_user_data():
