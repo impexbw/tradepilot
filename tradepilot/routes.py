@@ -1,9 +1,9 @@
 import os
-from flask import render_template, url_for, jsonify, flash, redirect, request
+from flask import abort, render_template, url_for, jsonify, flash, redirect, request
 from datetime import datetime, timedelta 
 from tradepilot import app, db, bcrypt
-from tradepilot.forms import RegistrationForm, LoginForm, UserDataForm, UpdateProfileForm, TradeForm
-from tradepilot.models import User, UserData, Trade
+from tradepilot.forms import RegistrationForm, LoginForm, UserDataForm, UpdateProfileForm, TradeForm, CategoryForm, CategoryForm, ItemForm
+from tradepilot.models import ChecklistCategory, ChecklistItem, User, UserData, Trade
 from flask_login import login_user, current_user, logout_user, login_required
 from decimal import Decimal
 from werkzeug.utils import secure_filename
@@ -526,6 +526,55 @@ def reset():
     else:
         flash('No account details found to reset.', 'warning')
     return redirect(url_for('profile'))
+
+@app.route('/checklist_settings', methods=['GET', 'POST'])
+@login_required
+def checklist_settings():
+    category_form = CategoryForm()
+    item_form = ItemForm()
+    categories = ChecklistCategory.query.filter_by(user_id=current_user.id).all()
+    if category_form.validate_on_submit() and 'add_category' in request.form:
+        new_category = ChecklistCategory(name=category_form.name.data, user_id=current_user.id)
+        db.session.add(new_category)
+        db.session.commit()
+        flash('New category added!', 'success')
+        return redirect(url_for('checklist_settings'))
+    if item_form.validate_on_submit() and 'add_item' in request.form:
+        new_item = ChecklistItem(text=item_form.text.data, category_id=item_form.category_id.data)
+        db.session.add(new_item)
+        db.session.commit()
+        flash('New item added!', 'success')
+        return redirect(url_for('checklist_settings'))
+    return render_template('checklist_settings.html', category_form=category_form, item_form=item_form, categories=categories)
+
+@app.route('/trading_checklist')
+@login_required
+def trading_checklist():
+    categories = ChecklistCategory.query.filter_by(user_id=current_user.id).all()
+    return render_template('checklist.html', categories=categories)
+
+@app.route('/delete_category/<int:category_id>', methods=['POST'])
+@login_required
+def delete_category(category_id):
+    category = ChecklistCategory.query.get_or_404(category_id)
+    if category.user_id != current_user.id:
+        abort(403)
+    ChecklistItem.query.filter_by(category_id=category_id).delete()
+    db.session.delete(category)
+    db.session.commit()
+    flash('Checklist category and its items deleted', 'success')
+    return redirect(url_for('checklist_settings'))
+
+@app.route('/delete_item/<int:item_id>', methods=['POST'])
+@login_required
+def delete_item(item_id):
+    item = ChecklistItem.query.get_or_404(item_id)
+    if item.category.user_id != current_user.id:
+        abort(403)
+    db.session.delete(item)
+    db.session.commit()
+    flash('Checklist item deleted', 'success')
+    return redirect(url_for('checklist_settings'))
 
 @app.context_processor
 def inject_user_data():

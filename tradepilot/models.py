@@ -105,3 +105,15 @@ class Trade(db.Model):
         trade.calculate_pips()
         trade.calculate_duration()
         return trade
+    
+class ChecklistCategory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    items = db.relationship('ChecklistItem', backref='category', lazy=True)
+
+class ChecklistItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(200), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('checklist_category.id'), nullable=False)
+    completed = db.Column(db.Boolean, default=False)

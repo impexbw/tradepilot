@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include 'head.html' %}
+
+<body class="bg-gray-800">
+
+    {% include 'header.html' %}
+
+    <div class="flex flex-col md:flex-row">
+        {% include 'left_column.html' %}
+        <main class="flex-1 bg-gray-900 p-6">
+            <div class="container mx-auto p-6 shadow-md rounded-lg border border-gray-700 text-gray-400 bg-gray-800">
+                <div class="max-w-lg mx-auto p-6 shadow-md rounded-lg border border-gray-600 ">
+                    <h2 class="text-2xl font-bold mb-4 text-center text-white">Trading Checklist Settings</h2>
+                    <form method="POST" action="{{ url_for('checklist_settings') }}">
+                        {{ category_form.hidden_tag() }}
+                        <div class="mb-4">
+                            <label for="name" class="block mb-1 text-sm font-medium text-gray-400">New Category Name:</label>
+                            {{ category_form.name(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                        </div>
+                        <div class="flex justify-end mb-4">
+                            <button type="submit" name="add_category" class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">Add Category</button>
+                        </div>
+                    </form>
+                    <form method="POST" action="{{ url_for('checklist_settings') }}">
+                        {{ item_form.hidden_tag() }}
+                        <div class="mb-4">
+                            <label for="text" class="block mb-1 text-sm font-medium text-gray-400">New Item Text:</label>
+                            {{ item_form.text(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                        </div>
+                        <div class="mb-4">
+                            <label for="category_id" class="block mb-1 text-sm font-medium text-gray-400">Category:</label>
+                            {{ item_form.category_id(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                        </div>
+                        <div class="flex justify-end mb-4">
+                            <button type="submit" name="add_item" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">Add Item</button>
+                        </div>
+                    </form>
+                    <div class="mt-8">
+                        <h3 class="text-lg font-bold text-white text-center">Existing Categories & Items</h3>
+                        {% for category in categories %}
+                            <div class="mt-4">
+                                <h4 class="text-md font-semibold text-blue-500">{{ category.name }}</h4>
+                                <ul class="ml-4">
+                                    {% for item in category.items %}
+                                        <li class="flex justify-between items-center mt-2">
+                                            <span>{{ item.text }}</span>
+                                            <form method="POST" action="{{ url_for('delete_item', item_id=item.id) }}">
+                                                {{ item_form.hidden_tag() }}
+                                                <button type="submit" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
+                                            </form>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

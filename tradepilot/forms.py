@@ -2,16 +2,26 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, DateTimeField, IntegerField, DecimalField, SelectField, TextAreaField, FileField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange, ValidationError, Optional
 from flask_wtf.file import FileField, FileAllowed
-from tradepilot.models import User
+from tradepilot.models import ChecklistCategory, User
 from flask_login import current_user
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=50)])
+    username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=6, max=128)])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Sign Up')
+    password = PasswordField('Password', validators=[DataRequired(), EqualTo('confirm_password', message='Passwords must match')])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired()])
+    submit = SubmitField('Register')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('That username is taken. Please choose a different one.')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('That email is already in use. Please choose a different one or log in.')
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -81,3 +91,16 @@ class TradeForm(FlaskForm):
     def validate_close_time(form, field):
         if field.data and field.data < form.open_time.data:
             raise ValidationError('Close Time must be after Open Time')
+        
+class CategoryForm(FlaskForm):
+    name = StringField('Category Name', validators=[DataRequired()])
+    submit = SubmitField('Add Category')
+
+class ItemForm(FlaskForm):
+    text = StringField('Item Text', validators=[DataRequired()])
+    category_id = SelectField('Category', coerce=int, validators=[DataRequired()])
+    submit = SubmitField('Add Item')
+
+    def __init__(self, *args, **kwargs):
+        super(ItemForm, self).__init__(*args, **kwargs)
+        self.category_id.choices = [(category.id, category.name) for category in ChecklistCategory.query.all()]

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'head.html' %}
+
+<body class="bg-gray-800">
+    {% include 'header.html' %}
+
+    <div class="flex flex-col md:flex-row">
+        {% include 'left_column.html' %}
+        <main class="flex-1 bg-gray-900 p-6">
+            <div class="container mx-auto p-6 shadow-md rounded-lg p-6 mb-4 border border-gray-700 text-gray-400 bg-gray-800">
+                <h2 class="text-lg font-bold mb-8 leading-none text-white">Daily Routine & Checklist</h2>
+                
+                <!-- Categories and Items -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    {% for category in categories %}
+                        <div class="mb-4 p-4 border border-gray-700 rounded-lg">
+                            <h3 class="text-white font-bold mb-4">{{ category.name }}</h3>
+                            <div class="space-y-2 text-gray-400">
+                                {% for item in category.items %}
+                                    <label class="flex items-center p-2 rounded border border-gray-600 bg-gray-800">
+                                        <input type="checkbox" id="check{{ item.id }}" class="mr-2" {% if item.completed %}checked{% endif %} onchange="toggleStrikethrough(this)">
+                                        <span class="{% if item.completed %}line-through{% endif %}">{{ item.text }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        .line-through {
+            text-decoration: line-through;
+        }
+    </style>
+
+    <script>
+        // Function to save the state of checkboxes to localStorage along with the current date
+        function saveCheckboxState() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checkboxStates = Array.from(checkboxes).map(checkbox => checkbox.checked);
+            const today = new Date().toISOString().split('T')[0];
+            localStorage.setItem('checkboxStates', JSON.stringify(checkboxStates));
+            localStorage.setItem('checkboxDate', today);
+        }
+
+        // Function to load the state of checkboxes from localStorage
+        function loadCheckboxState() {
+            const today = new Date().toISOString().split('T')[0];
+            const savedDate = localStorage.getItem('checkboxDate');
+            if (savedDate !== today) {
+                localStorage.removeItem('checkboxStates');
+                localStorage.removeItem('checkboxDate');
+                return;
+            }
+
+            const checkboxStates = JSON.parse(localStorage.getItem('checkboxStates'));
+            if (checkboxStates) {
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach((checkbox, index) => {
+                    checkbox.checked = checkboxStates[index];
+                    toggleStrikethrough(checkbox); // Update strikethrough on load
+                });
+            }
+        }
+
+        // Function to toggle strikethrough
+        function toggleStrikethrough(checkbox) {
+            const span = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                span.classList.add('line-through');
+            } else {
+                span.classList.remove('line-through');
+            }
+            saveCheckboxState(); // Save state after toggling
+        }
+
+        // Load the state of checkboxes when the page loads
+        window.addEventListener('load', loadCheckboxState);
+
+        // Save the state of checkboxes whenever they are changed
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                toggleStrikethrough(checkbox);
+            });
+        });
+    </script>
+</body>
+</html>
