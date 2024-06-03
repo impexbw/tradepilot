@@ -35,18 +35,11 @@ def update_equity(user_data, profit_delta):
     db.session.commit()
 
 def sync_balance_from_equity(user_data):
-    try:
-        logging.debug(f"Sync balance from equity: Old Balance = {user_data.balance}, Equity = {user_data.equity}")
-        user_data.balance = user_data.equity
-        user_data.last_update_date = datetime.now().date()
-        db.session.commit()
-        logging.debug(f"New Balance = {user_data.balance}, Last Update Date = {user_data.last_update_date}")
-
-        db.session.refresh(user_data)
-        logging.debug(f"Verified Balance in DB = {user_data.balance}, Verified Equity in DB = {user_data.equity}")
-    except Exception as e:
-        logging.error(f"Error syncing balance from equity: {e}")
-        db.session.rollback()
+    logging.debug(f"Sync balance from equity: Old Balance = {user_data.balance}, Equity = {user_data.equity}")
+    user_data.balance = Decimal(user_data.equity).quantize(Decimal('0.01'))
+    user_data.last_update_date = datetime.now().date()
+    db.session.commit()
+    logging.debug(f"New Balance = {user_data.balance}, Last Update Date = {user_data.last_update_date}")
 
 # Handle trade update, adjusting equity accordingly.
 def handle_trade_update(user_data, old_profit, new_profit):
@@ -144,9 +137,9 @@ def index():
     # Daily summary
     daily_summaries = get_daily_summary(trades)
 
-    # Use database values for balance and equity
-    balance = user_data.balance if user_data else Decimal(0)
-    equity = user_data.equity if user_data else Decimal(0)
+    # Use database values for balance and equity and format to 2 decimal places
+    balance = round(user_data.balance, 2) if user_data else Decimal(0)
+    equity = round(user_data.equity, 2) if user_data else Decimal(0)
 
     # Format the values
     win_rate = f"{win_rate:.2f}%"

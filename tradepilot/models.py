@@ -23,8 +23,8 @@ class UserData(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     broker_name = db.Column(db.String(100), nullable=False)
     platform = db.Column(db.String(50), nullable=False)
-    equity = db.Column(db.Float, nullable=False, default=0.0)  # Change to Float
-    balance = db.Column(db.Float, nullable=False, default=0.0)  # Change to Float
+    equity = db.Column(DECIMAL(18, 2), nullable=False, default=0.0)
+    balance = db.Column(DECIMAL(18, 2), nullable=False, default=0.0)
     min_trading_days = db.Column(db.String(255))
     max_daily_loss = db.Column(db.String(255))
     max_loss = db.Column(db.String(255))
