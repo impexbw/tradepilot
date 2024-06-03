@@ -103,4 +103,4 @@ class ItemForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super(ItemForm, self).__init__(*args, **kwargs)
-        self.category_id.choices = [(category.id, category.name) for category in ChecklistCategory.query.all()]
+        self.category_id.choices = [(category.id, category.name) for category in ChecklistCategory.query.filter_by(user_id=current_user.id).all()]

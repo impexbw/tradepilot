@@ -534,18 +534,21 @@ def checklist_settings():
     category_form = CategoryForm()
     item_form = ItemForm()
     categories = ChecklistCategory.query.filter_by(user_id=current_user.id).all()
+
     if category_form.validate_on_submit() and 'add_category' in request.form:
         new_category = ChecklistCategory(name=category_form.name.data, user_id=current_user.id)
         db.session.add(new_category)
         db.session.commit()
         flash('New category added!', 'success')
         return redirect(url_for('checklist_settings'))
+
     if item_form.validate_on_submit() and 'add_item' in request.form:
-        new_item = ChecklistItem(text=item_form.text.data, category_id=item_form.category_id.data)
+        new_item = ChecklistItem(text=item_form.text.data, category_id=item_form.category_id.data, user_id=current_user.id)
         db.session.add(new_item)
         db.session.commit()
         flash('New item added!', 'success')
         return redirect(url_for('checklist_settings'))
+
     return render_template('checklist_settings.html', category_form=category_form, item_form=item_form, categories=categories)
 
 @app.route('/trading_checklist')
@@ -570,7 +573,7 @@ def delete_category(category_id):
 @login_required
 def delete_item(item_id):
     item = ChecklistItem.query.get_or_404(item_id)
-    if item.category.user_id != current_user.id:
+    if item.user_id != current_user.id:
         abort(403)
     db.session.delete(item)
     db.session.commit()
