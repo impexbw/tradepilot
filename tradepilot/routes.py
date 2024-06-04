@@ -278,7 +278,7 @@ def edit():
         form.daily_max_loss.data = user_data.daily_max_loss
         form.consecutive_losers.data = user_data.consecutive_losers
         form.trading_strategy.data = user_data.trading_strategy
-        form.timeframes.data = form.timeframes.data
+        form.timeframes.data = user_data.timeframes
         form.trades_per_day.data = user_data.trades_per_day
     return render_template('edit.html', form=form, user_data=user_data)
 
