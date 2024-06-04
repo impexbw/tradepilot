@@ -32,7 +32,7 @@
                 <td class="px-2 py-1">{{ trade.close_time }}</td>
                 <td class="px-2 py-1">{{ trade.close_price }}</td>
                 <td class="px-2 py-1 {% if trade.profit >= 0 %}text-green-500 {% else %}text-red-500 {% endif %}">{{ trade.profit }}</td>
-                <td class="px-2 py-1">{{ trade.pips }}</td>
+                <td class="px-2 py-1">{{ '' if trade.trade_type == 'Buy' else '-' }}{{ trade.pips|abs }}</td>
                 <td class="px-2 py-1">{{ trade.duration }}</td>
             </tr>
             {% endfor %}

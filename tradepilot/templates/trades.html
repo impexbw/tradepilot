@@ -73,7 +73,7 @@
                             <td class="px-2 py-1">{{ trade.taxes }}</td>
                             <td class="px-2 py-1">{{ trade.swap }}</td>
                             <td class="px-2 py-1 {% if trade.profit >= 0 %}text-green-500 {% else %}text-red-500 font-medium{% endif %}">{{ trade.profit }}</td>
-                            <td class="px-2 py-1">{{ trade.pips }}</td>
+                            <td class="px-2 py-1">{{ '' if trade.trade_type == 'Buy' else '-' }}{{ trade.pips|abs }}</td>
                             <td class="px-2 py-1">{{ trade.duration }}</td>
                             <td class="px-2 py-1 flex items-center justify-center">
                                 <a href="{{ url_for('edit_trade', trade_id=trade.id) }}" class="px-2 py-1">

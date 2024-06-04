@@ -1,0 +1,14 @@
+
+*.pyc
+*.pyo
+*.png
+*.jpg
+*.bak
+*.dir
+*.dat
+migrations/
+venv/
+*.py[cod]
+*$py.class
+
+
