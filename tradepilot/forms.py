@@ -104,3 +104,25 @@ class ItemForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(ItemForm, self).__init__(*args, **kwargs)
         self.category_id.choices = [(category.id, category.name) for category in ChecklistCategory.query.filter_by(user_id=current_user.id).all()]
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField, SubmitField
+from wtforms.validators import DataRequired
+
+class TradingPlanForm(FlaskForm):
+    market_conditions = TextAreaField('Market Conditions', validators=[DataRequired()])
+    goals = TextAreaField('Goals', validators=[DataRequired()])
+    risk_management = TextAreaField('Risk Management', validators=[DataRequired()])
+    entry_exit_criteria = TextAreaField('Entry and Exit Criteria', validators=[DataRequired()])
+    trade_setup = TextAreaField('Trade Setup', validators=[DataRequired()])
+    review_notes = TextAreaField('Review and Notes', validators=[DataRequired()])
+    news_events = TextAreaField('News and Events', validators=[DataRequired()])
+    premarket_routine = TextAreaField('Premarket Routine', validators=[DataRequired()])
+    timeframe = TextAreaField('Timeframe', validators=[DataRequired()])
+    market_type = TextAreaField('Market Type', validators=[DataRequired()])
+    entries = TextAreaField('Entries', validators=[DataRequired()])
+    stop_loss = TextAreaField('Stop Loss', validators=[DataRequired()])
+    take_profit = TextAreaField('Take Profit', validators=[DataRequired()])
+    submit = SubmitField('Save')
+
+

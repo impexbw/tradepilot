@@ -28,3 +28,8 @@ strong {
     align-items: center;
     justify-content: center;
 }
+
+/* styles.css */
+.bgblue-gray {
+    background-color: #2d3949;
+  }

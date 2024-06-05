@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'head.html' %}
+<body class="bg-gray-800">
+
+    {% include 'header.html' %}
+
+    <div class="flex flex-col md:flex-row">
+        {% include 'left_column.html' %}
+        <main class="flex-1 bg-gray-900 p-6">
+            <div class="container mx-auto p-6 shadow-md rounded-lg border border-gray-700 text-gray-400 bg-gray-800">
+                <h2 class="text-2xl font-bold mb-6 text-center text-white">Edit Trading Plan</h2>
+                <div class="max-w-4xl mx-auto p-6 shadow-md rounded-lg">
+                    <form method="POST" action="{{ url_for('edit_trading_plan', plan_id=plan.id) }}">
+                        {{ form.hidden_tag() }}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <label for="market_conditions" class="block mb-1 text-sm font-medium text-gray-400">Market Conditions:</label>
+                                {{ form.market_conditions(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="goals" class="block mb-1 text-sm font-medium text-gray-400">Goals:</label>
+                                {{ form.goals(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="risk_management" class="block mb-1 text-sm font-medium text-gray-400">Risk Management:</label>
+                                {{ form.risk_management(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="entry_exit_criteria" class="block mb-1 text-sm font-medium text-gray-400">Entry and Exit Criteria:</label>
+                                {{ form.entry_exit_criteria(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="trade_setup" class="block mb-1 text-sm font-medium text-gray-400">Trade Setup:</label>
+                                {{ form.trade_setup(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="review_notes" class="block mb-1 text-sm font-medium text-gray-400">Review and Notes:</label>
+                                {{ form.review_notes(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="news_events" class="block mb-1 text-sm font-medium text-gray-400">News and Events:</label>
+                                {{ form.news_events(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="premarket_routine" class="block mb-1 text-sm font-medium text-gray-400">Premarket Routine:</label>
+                                {{ form.premarket_routine(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="timeframe" class="block mb-1 text-sm font-medium text-gray-400">Timeframe:</label>
+                                {{ form.timeframe(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="market_type" class="block mb-1 text-sm font-medium text-gray-400">Market Type:</label>
+                                {{ form.market_type(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="entries" class="block mb-1 text-sm font-medium text-gray-400">Entries:</label>
+                                {{ form.entries(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="stop_loss" class="block mb-1 text-sm font-medium text-gray-400">Stop Loss:</label>
+                                {{ form.stop_loss(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="take_profit" class="block mb-1 text-sm font-medium text-gray-400">Take Profit:</label>
+                                {{ form.take_profit(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            {{ form.submit(class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

@@ -1,9 +1,9 @@
 import os
 from flask import abort, render_template, url_for, jsonify, flash, redirect, request
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from tradepilot import app, db, bcrypt
-from tradepilot.forms import RegistrationForm, LoginForm, UserDataForm, UpdateProfileForm, TradeForm, CategoryForm, ItemForm
-from tradepilot.models import ChecklistCategory, ChecklistItem, User, UserData, Trade
+from tradepilot.forms import RegistrationForm, LoginForm, UserDataForm, UpdateProfileForm, TradeForm, CategoryForm, ItemForm, TradingPlanForm
+from tradepilot.models import ChecklistCategory, ChecklistItem, User, UserData, Trade, TradingPlan
 from flask_login import login_user, current_user, logout_user, login_required
 from decimal import Decimal
 from werkzeug.utils import secure_filename
@@ -105,6 +105,20 @@ def get_daily_summary(trades):
         summary[trade_date]['lots'] += float(trade.size)
         summary[trade_date]['result'] += float(trade.profit)
     return [{'date': date, 'trades': data['trades'], 'lots': data['lots'], 'result': data['result']} for date, data in sorted(summary.items(), reverse=True)]
+
+def get_latest_trading_plan_id(user_id):
+    latest_plan = TradingPlan.query.filter_by(user_id=user_id).order_by(TradingPlan.date.desc()).first()
+    return latest_plan.id if latest_plan else None
+
+def get_today_trading_plan(user_id):
+    today = date.today()
+    print(f"Checking for trading plan on: {today}")  # Log today's date
+    plans = TradingPlan.query.filter_by(user_id=user_id).all()
+    for plan in plans:
+        print(f"Existing plan date: {plan.date}, Today's date: {today}")  # Log each plan's date
+        if plan.date == today:
+            return plan
+    return None
 
 @app.route('/')
 @app.route('/dashboard')
@@ -580,9 +594,108 @@ def delete_item(item_id):
     flash('Checklist item deleted', 'success')
     return redirect(url_for('checklist_settings'))
 
+@app.route('/add_trading_plan', methods=['GET', 'POST'])
+@login_required
+def add_trading_plan():
+    existing_plan = get_today_trading_plan(current_user.id)
+    if existing_plan:
+        flash('A trading plan already exists for today. Please edit the existing plan.', 'warning')
+        return redirect(url_for('edit_trading_plan', plan_id=existing_plan.id))
+    
+    form = TradingPlanForm()
+    if form.validate_on_submit():
+        plan = TradingPlan(
+            user_id=current_user.id,
+            date=date.today(),
+            market_conditions=form.market_conditions.data,
+            goals=form.goals.data,
+            risk_management=form.risk_management.data,
+            entry_exit_criteria=form.entry_exit_criteria.data,
+            trade_setup=form.trade_setup.data,
+            review_notes=form.review_notes.data,
+            news_events=form.news_events.data,
+            premarket_routine=form.premarket_routine.data,
+            timeframe=form.timeframe.data,
+            market_type=form.market_type.data,
+            entries=form.entries.data,
+            stop_loss=form.stop_loss.data,
+            take_profit=form.take_profit.data
+        )
+        db.session.add(plan)
+        db.session.commit()
+        flash('Trading plan added successfully!', 'success')
+        return redirect(url_for('trading_plan_history'))
+    return render_template('add_trading_plan.html', form=form)
+
+
+@app.route('/edit_trading_plan/<int:plan_id>', methods=['GET', 'POST'])
+@login_required
+def edit_trading_plan(plan_id):
+    plan = TradingPlan.query.get_or_404(plan_id)
+    form = TradingPlanForm(obj=plan)
+    if form.validate_on_submit():
+        plan.market_conditions = form.market_conditions.data
+        plan.goals = form.goals.data
+        plan.risk_management = form.risk_management.data
+        plan.entry_exit_criteria = form.entry_exit_criteria.data
+        plan.trade_setup = form.trade_setup.data
+        plan.review_notes = form.review_notes.data
+        plan.news_events = form.news_events.data
+        plan.premarket_routine = form.premarket_routine.data
+        plan.timeframe = form.timeframe.data
+        plan.market_type = form.market_type.data
+        plan.entries = form.entries.data
+        plan.stop_loss = form.stop_loss.data
+        plan.take_profit = form.take_profit.data
+        db.session.commit()
+        flash('Trading plan updated successfully!', 'success')
+        return redirect(url_for('trading_plan_history'))
+    return render_template('edit_trading_plan.html', form=form, plan=plan)
+
+
+@app.route('/view_trading_plan/<int:plan_id>')
+@login_required
+def view_trading_plan(plan_id):
+    plan = TradingPlan.query.get_or_404(plan_id)
+    if plan.user_id != current_user.id:
+        abort(403)
+    return render_template('view_trading_plan.html', trading_plan=plan)
+
+@app.route('/trading_plan_history', methods=['GET'])
+@login_required
+def trading_plan_history():
+    plans = TradingPlan.query.filter_by(user_id=current_user.id).all()
+    return render_template('trading_plan_history.html', plans=plans)
+
+@app.route('/today_trading_plan')
+@login_required
+def today_trading_plan():
+    today_plan = get_today_trading_plan(current_user.id)
+    if today_plan:
+        return redirect(url_for('view_trading_plan', plan_id=today_plan.id))
+    else:
+        flash('No trading plan found for today. Please create a new one.', 'warning')
+        return redirect(url_for('add_trading_plan'))
+
+@app.route('/delete_trading_plan/<int:plan_id>', methods=['POST'])
+@login_required
+def delete_trading_plan(plan_id):
+    plan = TradingPlan.query.get_or_404(plan_id)
+    if plan.user_id != current_user.id:
+        abort(403)
+    db.session.delete(plan)
+    db.session.commit()
+    flash('Trading plan deleted successfully!', 'success')
+    return redirect(url_for('trading_plan_history'))
+
+
 @app.context_processor
 def inject_user_data():
+    def get_latest_trading_plan_id(user_id):
+        latest_plan = TradingPlan.query.filter_by(user_id=user_id).order_by(TradingPlan.date.desc()).first()
+        return latest_plan.id if latest_plan else None
+
     if current_user.is_authenticated:
         user_data = UserData.query.filter_by(user_id=current_user.id).first()
-        return dict(user_data=user_data, current_user=current_user)
-    return dict(user_data=None, current_user=None)
+        return dict(user_data=user_data, current_user=current_user, get_latest_trading_plan_id=get_latest_trading_plan_id)
+    return dict(user_data=None, current_user=None, get_latest_trading_plan_id=get_latest_trading_plan_id)

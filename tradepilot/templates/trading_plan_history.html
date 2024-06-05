@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'head.html' %}
+
+<body class="bg-gray-800">
+    {% include 'header.html' %}
+    <div class="flex flex-col md:flex-row">
+        {% include 'left_column.html' %}
+        <main class="flex-1 bg-gray-900 p-6">
+            <div class="container mx-auto p-6 shadow-md rounded-lg border border-gray-700 text-gray-400 bg-gray-800">
+                <h2 class="text-2xl font-bold mb-4 text-center text-white">Trading Plan History</h2>
+                <div class="max-w-4xl mx-auto p-6 shadow-md rounded-lg border border-gray-600">
+                    {% for plan in plans %}
+                        <div class="border border-gray-700 p-4 mb-4">
+                            <h3 class="text-xl font-bold text-white mb-2">Trading Plan for {{ plan.date }}</h3>
+                            <a href="{{ url_for('view_trading_plan', plan_id=plan.id) }}" class="text-blue-500 hover:underline">View Details</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

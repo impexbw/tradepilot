@@ -10,12 +10,9 @@
         <main class="flex-1 bg-gray-900 p-6">
             <div class="container mx-auto p-6 shadow-md rounded-lg border border-gray-700 text-gray-400 bg-gray-800">
                 <h2 class="text-lg font-bold mb-4 leading-none text-white">Add New Trade</h2>
-                <form method="POST" action="{{ url_for('add_trade') }}" enctype="multipart/form-data" class="text-gray-800 px-8 pt-6 pb-8 mb-4">
+                <form method="POST" action="{{ url_for('add_trade') }}" enctype="multipart/form-data" class="text-gray-800 px-4 md:px-8 pt-6 pb-8 mb-4">
                     {{ form.hidden_tag() }}
                     <style>
-                        .w-15 {
-                            width: 60px; /* Adjust as needed */
-                        }
                         .input-small {
                             font-size: 0.75rem;
                             padding: 0.25rem;
@@ -28,86 +25,84 @@
                             font-size: 0.75rem;
                         }
                     </style>
-                    <table class="table-small w-1/2">
-                        <tr>
-                            <td>{{ form.ticket.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.ticket(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.open_time.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.open_time(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="YYYY-MM-DD HH:MM:SS") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.trade_type.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.trade_type(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.size.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.size(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.item.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.item(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.price.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.price(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", step="0.01") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.s_l.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.s_l(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", step="0.01") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.t_p.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.t_p(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", step="0.01") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.close_time.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>
-                                {{ form.close_time(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="YYYY-MM-DD HH:MM:SS") }}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="md:col-span-1">
+                            <div>
+                                <label for="ticket" class="block mb-2 text-sm font-medium text-gray-400">Ticket:</label>
+                                {{ form.ticket(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="open_time" class="block mb-2 text-sm font-medium text-gray-400">Open Time:</label>
+                                {{ form.open_time(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5", placeholder="YYYY-MM-DD HH:MM:SS") }}
+                            </div>
+                            <div>
+                                <label for="trade_type" class="block mb-2 text-sm font-medium text-gray-400">Trade Type:</label>
+                                {{ form.trade_type(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="size" class="block mb-2 text-sm font-medium text-gray-400">Size:</label>
+                                {{ form.size(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="item" class="block mb-2 text-sm font-medium text-gray-400">Item:</label>
+                                {{ form.item(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5") }}
+                            </div>
+                            <div>
+                                <label for="price" class="block mb-2 text-sm font-medium text-gray-400">Price:</label>
+                                {{ form.price(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5", step="0.01") }}
+                            </div>
+                            <div>
+                                <label for="s_l" class="block mb-2 text-sm font-medium text-gray-400">S / L:</label>
+                                {{ form.s_l(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5", step="0.01") }}
+                            </div>
+                            <div>
+                                <label for="t_p" class="block mb-2 text-sm font-medium text-gray-400">T / P:</label>
+                                {{ form.t_p(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5", step="0.01") }}
+                            </div>
+                            <div>
+                                <label for="close_time" class="block mb-2 text-sm font-medium text-gray-400">Close Time:</label>
+                                {{ form.close_time(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5", placeholder="YYYY-MM-DD HH:MM:SS") }}
                                 <p id="closeTimeError" class="error-message"></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.close_price.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.close_price(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", step="0.01") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.comm.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.comm(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="0.00", value="0.00", step="0.01") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.taxes.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.taxes(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="0.00", value="0.00", step="0.01") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.swap.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.swap(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="0.00", value="0.00", step="0.01") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.profit.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.profit(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", step="0.01") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.strategy.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.strategy(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form.comments.label(class="block mb-2 text-sm font-medium text-gray-400") }}</td>
-                            <td>{{ form.comments(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
+                            </div>
+                            <div>
+                                <label for="close_price" class="block mb-2 text-sm font-medium text-gray-400">Close Price:</label>
+                                {{ form.close_price(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5", step="0.01") }}
+                            </div>
+                            <div>
+                                <label for="comm" class="block mb-2 text-sm font-medium text-gray-400">Comm:</label>
+                                {{ form.comm(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5", placeholder="0.00", value="0.00", step="0.01") }}
+                            </div>
+                            <div>
+                                <label for="taxes" class="block mb-2 text-sm font-medium text-gray-400">Taxes:</label>
+                                {{ form.taxes(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5", placeholder="0.00", value="0.00", step="0.01") }}
+                            </div>
+                            <div>
+                                <label for="swap" class="block mb-2 text-sm font-medium text-gray-400">Swap:</label>
+                                {{ form.swap(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5", placeholder="0.00", value="0.00", step="0.01") }}
+                            </div>
+                            <div>
+                                <label for="profit" class="block mb-2 text-sm font-medium text-gray-400">Profit:</label>
+                                {{ form.profit(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5", step="0.01") }}
+                            </div>
+                        </div>
+                        <div class="md:col-span-1">
+                            <div class="w-full md:w-auto">
                                 <label for="dropzoneFileUpload" class="block mb-2 text-sm font-medium text-gray-400">Screenshots</label>
-                                <div class="dropzone bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="dropzoneFileUpload"></div>
-                            </td>
-                        </tr>                      
-                        <tr>
-                            <td colspan="2" class="text-right py-4">
-                                {{ form.submit(class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900", value="Save") }}
-                            </td>
-                        </tr>                        
-                    </table>
+                                <div class="dropzone bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5" id="dropzoneFileUpload"></div>
+                            </div>
+                            <div>
+                                <label for="strategy" class="block mb-2 text-sm font-medium text-gray-400">Strategy:</label>
+                                {{ form.strategy(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5") }}
+                            </div>
+                            <div class="w-full md:w-auto mt-4 md:mt-8">
+                                <label for="comments" class="block mb-2 text-sm font-medium text-gray-400">Comments:</label>
+                                {{ form.comments(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5") }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right py-4">
+                        {{ form.submit(class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900", value="Save") }}
+                    </div>
                 </form>
             </div>
         </main>
