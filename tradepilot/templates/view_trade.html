@@ -9,73 +9,125 @@
         {% include 'left_column.html' %}
         <main class="flex-1 bg-gray-900 p-6">
             <div class="container mx-auto p-6 shadow-md rounded-lg border border-gray-700 text-gray-400 bg-gray-800">
-                <h2 class="text-2xl font-bold mb-6 text-center text-white">View Trading Plan</h2>
+                <h2 class="text-2xl font-bold mb-6">View Trade</h2>
                 <div class="bg-gray-800">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 w-5/6 mx-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 w-5/6">
                         <div class="space-y-4">
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Market Conditions:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.market_conditions }}</span>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Ticket:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.ticket }}</span>
                             </div>
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Goals:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.goals }}</span>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Open Time:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.open_time }}</span>
                             </div>
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Risk Management:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.risk_management }}</span>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Trade Type:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.trade_type }}</span>
                             </div>
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Entry and Exit Criteria:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.entry_exit_criteria }}</span>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Size:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.size }}</span>
                             </div>
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Trade Setup:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.trade_setup }}</span>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Item:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.item }}</span>
                             </div>
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Review and Notes:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.review_notes }}</span>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Price:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.price }}</span>
                             </div>
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">News and Events:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.news_events }}</span>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">S / L:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.s_l }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">T / P:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.t_p }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Close Time:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.close_time }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Close Price:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.close_price }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Comm:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.comm }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Taxes:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.taxes }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Swap:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.swap }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Profit:</span>
+                                <span class="block text-sm w-2/3 md:w-3/4">{{ trade.profit }}</span>
                             </div>
                         </div>
                         <div class="space-y-4">
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Premarket Routine:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.premarket_routine }}</span>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Screenshots</h3>
+                                <div class="flex space-x-2 mb-4">
+                                    {% if trade.screenshot1 %}
+                                        <img src="{{ url_for('static', filename='uploads/' ~ trade.screenshot1) }}" alt="Screenshot 1" class="w-1/3 h-auto cursor-pointer" onclick="openModal('{{ url_for('static', filename='uploads/' ~ trade.screenshot1) }}')">
+                                    {% else %}
+                                        <p class="w-1/3 text-center"></p>
+                                    {% endif %}
+                                    {% if trade.screenshot2 %}
+                                        <img src="{{ url_for('static', filename='uploads/' ~ trade.screenshot2) }}" alt="Screenshot 2" class="w-1/3 h-auto cursor-pointer" onclick="openModal('{{ url_for('static', filename='uploads/' ~ trade.screenshot2) }}')">
+                                    {% else %}
+                                        <p class="w-1/3 text-center"></p>
+                                    {% endif %}
+                                    {% if trade.screenshot3 %}
+                                        <img src="{{ url_for('static', filename='uploads/' ~ trade.screenshot3) }}" alt="Screenshot 3" class="w-1/3 h-auto cursor-pointer" onclick="openModal('{{ url_for('static', filename='uploads/' ~ trade.screenshot3) }}')">
+                                    {% else %}
+                                        <p class="w-1/3 text-center"></p>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Timeframe:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.timeframe }}</span>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Strategy</h3>
+                                <p class="text-gray-400">{{ trade.strategy }}</p>
                             </div>
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Market Type:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.market_type }}</span>
-                            </div>
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Entries:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.entries }}</span>
-                            </div>
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Stop Loss:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.stop_loss }}</span>
-                            </div>
-                            <div class="flex items-center border border-gray-700 p-2 rounded">
-                                <span class="block mb-2 text-sm font-medium text-gray-400 w-1/3 md:w-1/4">Take Profit:</span>
-                                <span class="block text-sm w-2/3 md:w-3/4">{{ trading_plan.take_profit }}</span>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Comments</h3>
+                                <p class="text-gray-400">{{ trade.comments }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="text-right mt-4">
-                    <a href="{{ url_for('edit_trading_plan', plan_id=trading_plan.id) }}" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline">Edit Plan</a>
+                    <a href="{{ url_for('edit_trade', trade_id=trade.id) }}" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline">Edit Trade</a>
                 </div>
             </div>
         </main>
     </div>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
+        <div class="relative max-w-6xl mx-auto p-4">
+            <img id="modalImage" src="" alt="Screenshot" class="max-w-full max-h-screen rounded-lg">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-white bg-red-500 hover:bg-red-700 rounded-full px-2 py-1">X</button>
+        </div>
+    </div>
+
+    <!-- Script for modal functionality -->
+    <script>
+        function openModal(imageSrc) {
+            document.getElementById('modalImage').src = imageSrc;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+    </script>
 
 </body>
 </html>
