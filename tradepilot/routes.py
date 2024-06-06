@@ -71,20 +71,21 @@ def calculate_average_rrr(trades):
     
     for trade in trades:
         try:
-            # Ensure all necessary fields are present and convertible to float
-            if all(hasattr(trade, attr) for attr in ['t_p', 's_l', 'price']):
-                take_profit = float(trade.t_p)
-                stop_loss = float(trade.s_l)
-                entry_price = float(trade.price)
-                
-                if stop_loss != entry_price and stop_loss != 0 and entry_price != 0:
-                    rrr = abs(take_profit - entry_price) / abs(stop_loss - entry_price)
-                    total_rrr += rrr
-                    count += 1
+            # Convert attributes to float and check if they are non-zero
+            take_profit = float(trade.t_p)
+            stop_loss = float(trade.s_l)
+            entry_price = float(trade.price)
+
+            # Ensure that take_profit, stop_loss, and entry_price are valid and non-zero
+            if stop_loss != entry_price and stop_loss != 0 and entry_price != 0:
+                # Calculate RRR
+                rrr = abs(take_profit - entry_price) / abs(entry_price - stop_loss)
+                total_rrr += rrr
+                count += 1
         except (ValueError, TypeError, AttributeError):
             # Skip trades with missing or invalid attributes
             continue
-    
+
     return total_rrr / count if count > 0 else 0
 
 # Calculate expectancy.
