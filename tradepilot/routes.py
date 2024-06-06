@@ -65,15 +65,26 @@ def calculate_max_drawdown(trades):
             max_drawdown = drawdown
     return max_drawdown
 
-# Calculate average risk-reward ratio (RRR).
 def calculate_average_rrr(trades):
     total_rrr = 0
     count = 0
+    
     for trade in trades:
-        if trade.t_p and trade.s_l and trade.price:
-            rrr = abs(float(trade.t_p) - float(trade.price)) / abs(float(trade.s_l) - float(trade.price)) if trade.s_l != trade.price else 0
-            total_rrr += rrr
-            count += 1
+        try:
+            # Ensure all necessary fields are present and numeric
+            if all(isinstance(getattr(trade, attr), (int, float)) for attr in ['t_p', 's_l', 'price']):
+                take_profit = float(trade.t_p)
+                stop_loss = float(trade.s_l)
+                entry_price = float(trade.price)
+                
+                if stop_loss != entry_price:
+                    rrr = abs(take_profit - entry_price) / abs(stop_loss - entry_price)
+                    total_rrr += rrr
+                    count += 1
+        except AttributeError:
+            # Skip trades with missing attributes
+            continue
+    
     return total_rrr / count if count > 0 else 0
 
 # Calculate expectancy.
