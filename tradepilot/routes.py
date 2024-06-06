@@ -65,24 +65,26 @@ def calculate_max_drawdown(trades):
             max_drawdown = drawdown
     return max_drawdown
 
-def calculate_average_rrr(trades):
+def calculate_average_rrr(trades, max_rrr_threshold=10):
     total_rrr = 0
     count = 0
-    
+
     for trade in trades:
         try:
-            # Convert attributes to float and check if they are non-zero
-            take_profit = float(trade.t_p)
-            stop_loss = float(trade.s_l)
-            entry_price = float(trade.price)
+            # Ensure all necessary fields are present and numeric
+            if all(hasattr(trade, attr) and isinstance(getattr(trade, attr), (Decimal, float, int)) for attr in ['t_p', 's_l', 'price']):
+                take_profit = float(trade.t_p)
+                stop_loss = float(trade.s_l)
+                entry_price = float(trade.price)
 
-            # Ensure that take_profit, stop_loss, and entry_price are valid and non-zero
-            if stop_loss != entry_price and stop_loss != 0 and entry_price != 0:
-                # Calculate RRR
-                rrr = abs(take_profit - entry_price) / abs(entry_price - stop_loss)
-                total_rrr += rrr
-                count += 1
-        except (ValueError, TypeError, AttributeError):
+                # Ensure stop_loss and entry_price are not equal to avoid division by zero
+                if stop_loss != entry_price:
+                    rrr = abs(take_profit - entry_price) / abs(stop_loss - entry_price)
+                    # Filter out extremely high RRR values
+                    if rrr <= max_rrr_threshold:
+                        total_rrr += rrr
+                        count += 1
+        except (AttributeError, ValueError):
             # Skip trades with missing or invalid attributes
             continue
 
