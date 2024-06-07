@@ -18,7 +18,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 app.config['DROPZONE_UPLOAD_MULTIPLE'] = True
 app.config['DROPZONE_ALLOWED_FILE_TYPE'] = 'image'
 app.config['DROPZONE_MAX_FILE_SIZE'] = 3  # 3 MB
-app.config['DROPZONE_MAX_FILES'] = 3
+app.config['DROPZONE_MAX_FILES'] = 6
 
 # Ensure the upload directory exists
 upload_dir = app.config['UPLOAD_FOLDER']
@@ -46,3 +46,10 @@ dropzone = Dropzone(app)
 celery = make_celery(app)
 
 from tradepilot import routes, models
+
+# Custom filter to use getattr in Jinja2
+@app.template_filter()
+def get_attr(obj, attr):
+    return getattr(obj, attr)
+
+app.jinja_env.filters['get_attr'] = get_attr

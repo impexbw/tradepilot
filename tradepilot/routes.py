@@ -485,43 +485,40 @@ def trades():
 def delete_file():
     data = request.get_json()
     filename = data.get('filename')
-    trade_id = data.get('trade_id')
+    plan_id = data.get('plan_id')
+    
+    if not filename or not plan_id:
+        return jsonify({'error': 'Invalid data'}), 400
+    
+    # Assuming you have a function to delete the file from the filesystem
+    delete_file_from_filesystem(filename)
 
-    if not filename or not trade_id:
-        app.logger.error('Invalid request: Missing filename or trade_id')
-        return jsonify({'error': 'Invalid request'}), 400
+    # Update the plan to remove the reference to the deleted file
+    plan = TradingPlan.query.get(plan_id)
+    if plan:
+        if plan.image1 == filename:
+            plan.image1 = None
+        elif plan.image2 == filename:
+            plan.image2 = None
+        elif plan.image3 == filename:
+            plan.image3 = None
+        elif plan.image4 == filename:
+            plan.image4 = None
+        elif plan.image5 == filename:
+            plan.image5 = None
+        elif plan.image6 == filename:
+            plan.image6 = None
+        db.session.commit()
+    
+    return jsonify({'success': True})
 
-    trade = Trade.query.get_or_404(trade_id)
-
-    # Ensure the current user owns the trade
-    if trade.user_id != current_user.id:
-        app.logger.error(f'User {current_user.id} does not own trade {trade_id}')
-        abort(403)
-
-    # Determine which screenshot field to clear
-    screenshot_field = None
-    if trade.screenshot1 == filename:
-        trade.screenshot1 = None
-    elif trade.screenshot2 == filename:
-        trade.screenshot2 = None
-    elif trade.screenshot3 == filename:
-        trade.screenshot3 = None
-    else:
-        app.logger.error(f'File {filename} not found in trade {trade_id}')
-        return jsonify({'error': 'File not found'}), 404
-
-    # Commit the changes to the database
-    db.session.commit()
-
-    # Remove the file from the filesystem
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    if os.path.exists(file_path):
-        os.remove(file_path)
-        app.logger.info(f'File {filename} removed from filesystem')
-    else:
-        app.logger.error(f'File {filename} not found in filesystem')
-
-    return jsonify({'success': 'File deleted', 'screenshot_field': screenshot_field}), 200
+def delete_file_from_filesystem(filename):
+    try:
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        if os.path.exists(filepath):
+            os.remove(filepath)
+    except Exception as e:
+        print(f"Error deleting file {filename}: {e}")
 
 @app.route('/reset', methods=['POST'])
 @login_required
@@ -618,6 +615,7 @@ def add_trading_plan():
     
     form = TradingPlanForm()
     if form.validate_on_submit():
+        uploaded_files = request.form.getlist('uploaded_files[]')
         plan = TradingPlan(
             user_id=current_user.id,
             date=date.today(),
@@ -633,7 +631,13 @@ def add_trading_plan():
             market_type=form.market_type.data,
             entries=form.entries.data,
             stop_loss=form.stop_loss.data,
-            take_profit=form.take_profit.data
+            take_profit=form.take_profit.data,
+            image1=uploaded_files[0] if len(uploaded_files) > 0 else None,
+            image2=uploaded_files[1] if len(uploaded_files) > 1 else None,
+            image3=uploaded_files[2] if len(uploaded_files) > 2 else None,
+            image4=uploaded_files[3] if len(uploaded_files) > 3 else None,
+            image5=uploaded_files[4] if len(uploaded_files) > 4 else None,
+            image6=uploaded_files[5] if len(uploaded_files) > 5 else None
         )
         db.session.add(plan)
         db.session.commit()
@@ -641,13 +645,13 @@ def add_trading_plan():
         return redirect(url_for('trading_plan_history'))
     return render_template('add_trading_plan.html', form=form)
 
-
 @app.route('/edit_trading_plan/<int:plan_id>', methods=['GET', 'POST'])
 @login_required
 def edit_trading_plan(plan_id):
     plan = TradingPlan.query.get_or_404(plan_id)
     form = TradingPlanForm(obj=plan)
     if form.validate_on_submit():
+        # Update the trading plan fields
         plan.market_conditions = form.market_conditions.data
         plan.goals = form.goals.data
         plan.risk_management = form.risk_management.data
@@ -661,11 +665,23 @@ def edit_trading_plan(plan_id):
         plan.entries = form.entries.data
         plan.stop_loss = form.stop_loss.data
         plan.take_profit = form.take_profit.data
+
+        # Handle newly uploaded images
+        for i in range(1, 7):
+            uploaded_file = request.files.get(f'image{i}')
+            if uploaded_file and uploaded_file.filename != '':
+                filename = save_file(uploaded_file)
+                setattr(plan, f'image{i}', filename)
+
         db.session.commit()
         flash('Trading plan updated successfully!', 'success')
         return redirect(url_for('trading_plan_history'))
     return render_template('edit_trading_plan.html', form=form, plan=plan)
 
+def save_file(file):
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return filename
 
 @app.route('/view_trading_plan/<int:plan_id>')
 @login_required

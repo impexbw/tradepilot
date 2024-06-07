@@ -11,7 +11,7 @@
             <div class="container mx-auto p-6 shadow-md rounded-lg border border-gray-700 text-gray-400 bg-gray-800">
                 <h2 class="text-2xl font-bold mb-6 text-center text-white">Edit Trading Plan</h2>
                 <div class="max-w-4xl mx-auto p-6 shadow-md rounded-lg">
-                    <form method="POST" action="{{ url_for('edit_trading_plan', plan_id=plan.id) }}">
+                    <form method="POST" action="{{ url_for('edit_trading_plan', plan_id=plan.id) }}" enctype="multipart/form-data">
                         {{ form.hidden_tag() }}
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div>
@@ -67,6 +67,10 @@
                                 {{ form.take_profit(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5") }}
                             </div>
                         </div>
+                        <div class="mt-4">
+                            <label for="dropzoneFileUpload" class="block mb-2 text-sm font-medium text-gray-400">Screenshots</label>
+                            <div class="dropzone bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="dropzoneFileUpload"></div>
+                        </div>
                         <div class="flex justify-end mt-4">
                             {{ form.submit(class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900") }}
                         </div>
@@ -75,6 +79,91 @@
             </div>
         </main>
     </div>
+
+    <script>
+        flatpickr("input[name='open_time']", {
+            enableTime: true,
+            enableSeconds: true,
+            dateFormat: "Y-m-d H:i:S",
+        });
+        flatpickr("input[name='close_time']", {
+            enableTime: true,
+            enableSeconds: true,
+            dateFormat: "Y-m-d H:i:S",
+        });
+    </script>
+
+    <script>
+    Dropzone.autoDiscover = false;
+    var dropzone = new Dropzone("#dropzoneFileUpload", {
+        url: "{{ url_for('upload_file') }}",
+        maxFiles: 6,
+        maxFilesize: 3, // MB
+        acceptedFiles: "image/*",
+        addRemoveLinks: true,
+        init: function() {
+            var existingFiles = [
+                {% if plan.image1 %} { name: "{{ plan.image1 }}", size: 12345, url: "{{ url_for('static', filename='uploads/' ~ plan.image1) }}" }, {% endif %}
+                {% if plan.image2 %} { name: "{{ plan.image2 }}", size: 12345, url: "{{ url_for('static', filename='uploads/' ~ plan.image2) }}" }, {% endif %}
+                {% if plan.image3 %} { name: "{{ plan.image3 }}", size: 12345, url: "{{ url_for('static', filename='uploads/' ~ plan.image3) }}" }, {% endif %}
+                {% if plan.image4 %} { name: "{{ plan.image4 }}", size: 12345, url: "{{ url_for('static', filename='uploads/' ~ plan.image4) }}" }, {% endif %}
+                {% if plan.image5 %} { name: "{{ plan.image5 }}", size: 12345, url: "{{ url_for('static', filename='uploads/' ~ plan.image5) }}" }, {% endif %}
+                {% if plan.image6 %} { name: "{{ plan.image6 }}", size: 12345, url: "{{ url_for('static', filename='uploads/' ~ plan.image6) }}" }, {% endif %}
+            ];
+
+            for (var i = 0; i < existingFiles.length; i++) {
+                var mockFile = existingFiles[i];
+                this.emit("addedfile", mockFile);
+                this.emit("thumbnail", mockFile, mockFile.url);
+                this.emit("complete", mockFile);
+                mockFile.serverId = mockFile.name; // Set the serverId to match the filename
+                this.options.maxFiles = this.options.maxFiles - 1; // Decrement the maxFiles count initially
+            }
+        },
+        success: function(file, response) {
+            console.log("File uploaded:", response);
+            // Store the uploaded filenames in a hidden input for form submission
+            var hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'uploaded_files[]';
+            hiddenInput.value = response.filename;
+            document.querySelector('form').appendChild(hiddenInput);
+            file.serverId = response.filename; // Store the filename returned by the server
+        },
+        error: function(file, response) {
+            console.log("Upload error:", response);
+        },
+        removedfile: function(file) {
+            var filename = file.serverId; // Use the serverId set in the success function
+            console.log("Removing file:", filename);
+
+            // Send a request to the server to delete the file
+            fetch("{{ url_for('delete_file') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ filename: filename, plan_id: {{ plan.id }} }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("File deleted:", data);
+                // Optionally remove the hidden input corresponding to the file
+                var hiddenInputs = document.querySelectorAll('input[name="uploaded_files[]"]');
+                hiddenInputs.forEach(function(input) {
+                    if (input.value === filename) {
+                        input.remove();
+                    }
+                });
+                file.previewElement.remove(); // Only remove the preview element on success
+                dropzone.options.maxFiles = dropzone.options.maxFiles + 1; // Increment the maxFiles count so new files can be added
+            })
+            .catch(error => {
+                console.error("Deletion error:", error);
+            });
+        }
+    });
+    </script>
 
 </body>
 </html>

@@ -10,16 +10,16 @@
             <div class="container mx-auto p-6 text-gray-400 bg-gray-800">
                 <h2 class="text-2xl font-bold mb-4 text-center text-white">Add Trading Plan</h2>
                 <div class="max-w-4xl mx-auto p-6 rounded-lg">
-                    <form method="POST" action="{{ url_for('add_trading_plan') }}">
+                    <form method="POST" action="{{ url_for('add_trading_plan') }}" enctype="multipart/form-data">
                         {{ form.hidden_tag() }}
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div>
                                 <label for="market_conditions" class="block mb-1 text-sm font-medium text-gray-400">Market Conditions:</label>
-                                {{ form.market_conditions(class="bg-gray-800 border border-gray-700 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="Bullish, expecting upward momentum") }}
+                                {{ form.market_conditions(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="Bullish, expecting upward momentum") }}
                             </div>
                             <div>
                                 <label for="goals" class="block mb-1 text-sm font-medium text-gray-400">Goals:</label>
-                                {{ form.goals(class="bg-gray-800 border border-gray-700 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="Achieve a daily profit target of $500") }}
+                                {{ form.goals(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="Achieve a daily profit target of $500") }}
                             </div>
                             <div>
                                 <label for="risk_management" class="block mb-1 text-sm font-medium text-gray-400">Risk Management:</label>
@@ -66,6 +66,10 @@
                                 {{ form.take_profit(class="bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5", placeholder="Take profit all at once at predetermined levels") }}
                             </div>
                         </div>
+                        <div class="w-full mt-4">
+                            <label for="dropzoneFileUpload" class="block mb-2 text-sm font-medium text-gray-400">Screenshots</label>
+                            <div class="dropzone bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg focus:border-gray-500 focus:ring-1 focus:ring-gray-500 block w-full p-2.5" id="dropzoneFileUpload"></div>
+                        </div>
                         <div class="flex justify-end mt-4">
                             {{ form.submit(class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900") }}
                         </div>
@@ -74,5 +78,28 @@
             </div>
         </main>
     </div>
+
+    <script>
+        Dropzone.autoDiscover = false;
+        var dropzone = new Dropzone("#dropzoneFileUpload", {
+            url: "{{ url_for('upload_file') }}",
+            maxFiles: 6,
+            maxFilesize: 3, // MB
+            acceptedFiles: "image/*",
+            addRemoveLinks: true,
+            success: function(file, response) {
+                console.log(response);
+                // Store the uploaded filenames in a hidden input or somewhere in your form for later use
+                var hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'uploaded_files[]';
+                hiddenInput.value = response.filename;
+                document.querySelector('form').appendChild(hiddenInput);
+            },
+            error: function(file, response) {
+                console.log(response);
+            }
+        });
+    </script>
 </body>
 </html>

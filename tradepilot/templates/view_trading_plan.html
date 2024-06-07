@@ -9,8 +9,9 @@
         <main class="flex-1 bg-gray-900 p-6">
             <div class="container mx-auto p-6 shadow-md rounded-lg border border-gray-700 text-gray-400 bg-gray-800">
                 <h2 class="text-2xl font-bold mb-4 text-center text-white">View Trading Plan</h2>
-                <div class="max-w-4xl mx-auto p-6 shadow-md rounded-lg">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div class="max-w-6xl mx-auto p-6 shadow-md rounded-lg grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Trading Plan Details -->
+                    <div class="md:col-span-2 grid grid-cols-1 gap-4 text-sm">
                         <div class="border border-gray-700 p-4 rounded-lg">
                             <label class="block mb-1 text-sm font-medium text-gray-400">Market Conditions:</label>
                             <p class="text-gray-300">{{ trading_plan.market_conditions }}</p>
@@ -64,6 +65,17 @@
                             <p class="text-gray-300">{{ trading_plan.take_profit }}</p>
                         </div>
                     </div>
+                    <!-- Trading Plan Images -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold mb-2 text-white">Screenshots</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            {% for i in range(1, 7) %}
+                                {% if trading_plan|get_attr('image' + i|string) %}
+                                    <img src="{{ url_for('static', filename='uploads/' ~ trading_plan|get_attr('image' + i|string)) }}" alt="Screenshot {{ i }}" class="w-full h-auto cursor-pointer p-2" onclick="openModal('{{ url_for('static', filename='uploads/' ~ trading_plan|get_attr('image' + i|string)) }}')">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
                 <div class="flex justify-end mt-4 space-x-2">
                     <a href="{{ url_for('edit_trading_plan', plan_id=trading_plan.id) }}" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline">Edit Plan</a>
@@ -74,5 +86,26 @@
             </div>
         </main>
     </div>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
+        <div class="relative max-w-6xl mx-auto p-4">
+            <img id="modalImage" src="" alt="Screenshot" class="max-w-full max-h-screen rounded-lg">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-white bg-red-500 hover:bg-red-700 rounded-full px-2 py-1">X</button>
+        </div>
+    </div>
+
+    <!-- Script for modal functionality -->
+    <script>
+        function openModal(imageSrc) {
+            document.getElementById('modalImage').src = imageSrc;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+    </script>
+
 </body>
 </html>
