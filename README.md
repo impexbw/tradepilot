@@ -44,8 +44,49 @@ With the virtual environment activated, install the project dependencies listed 
 pip install -r requirements.txt
 ```
 
-### 4. Running the Project
-After installing the dependencies, you can run the project by executing:
+### 4. Configure the Database
+Edit the `__init__.py` file to configure the database connection string with your own database credentials:
+
+Open the `__init__.py` file located in the project directory, and adjust the following line to match your database configuration:
+
+```python
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://your-username:your-password@localhost/your-database-name'
+```
+
+Replace `your-username`, `your-password`, and `your-database-name` with your MySQL credentials and the name of your database.
+
+### 5. Set Up Flask Environment
+Before running database migrations, set the `FLASK_APP` environment variable to point to your application file:
+
+- **For Windows PowerShell:**
+
+  ```bash
+  $env:FLASK_APP = "run.py:tradepilot"
+  ```
+
+- **For Windows CMD:**
+
+  ```bash
+  set FLASK_APP=run.py:tradepilot
+  ```
+
+- **For macOS/Linux:**
+
+  ```bash
+  export FLASK_APP=run.py:tradepilot
+  ```
+
+### 6. Create and Apply Database Migrations
+Once the environment is set, you can create and apply database migrations:
+
+```bash
+flask --app tradepilot db init
+flask --app tradepilot db migrate -m "Initial migration."
+flask --app tradepilot db upgrade
+```
+
+### 7. Running the Project
+After installing the dependencies and setting up the database, you can run the project by executing:
 
 ```bash
 python run.py
@@ -53,26 +94,12 @@ python run.py
 
 Replace `run.py` with the actual entry point of your project if it's different.
 
-### 5. Deactivating the Virtual Environment
+### 8. Deactivating the Virtual Environment
 When you're done working on the project, you can deactivate the virtual environment by running:
 
 ```bash
 deactivate
 ```
-
-## How to Install
-
-To summarize, here’s a quick step-by-step guide on how to install and set up the project:
-
-1. Clone the Repository: `git clone https://github.com/impexbw/tradepilot.git`
-2. Navigate to the Directory: `cd tradepilot`
-3. Create a Virtual Environment: `python -m venv venv`
-4. Activate the Virtual Environment:
-   - Windows: `venv\Scripts\activate`
-   - macOS/Linux: `source venv/bin/activate`
-5. Install Dependencies: `pip install -r requirements.txt`
-6. Run the Project: `python run.py`
-7. Deactivate the Environment When Done: `deactivate`
 
 ## Contributing
 If you'd like to contribute to the project, please fork the repository and use a feature branch. Pull requests are welcome.
@@ -82,4 +109,3 @@ This project was created and is maintained by Ludovic Micinthe.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
