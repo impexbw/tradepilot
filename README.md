@@ -77,6 +77,9 @@ To summarize, here’s a quick step-by-step guide on how to install and set up t
 ## Contributing
 If you'd like to contribute to the project, please fork the repository and use a feature branch. Pull requests are welcome.
 
+## Author
+This project was created and is maintained by Ludovic Micinthe.
+
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
