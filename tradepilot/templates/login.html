@@ -5,7 +5,7 @@
 
     <div class="p-8 rounded shadow-md w-full max-w-sm border border-gray-700 text-gray-400 bg-gray-800">
         <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
-        <form method="POST" action="{{ url_for('login') }}">
+        <form method="POST" action="{{ url_for('user.login') }}">
             {{ form.hidden_tag() }}
             <div class="mb-4">
                 {{ form.email.label(class="block mb-2") }}
@@ -27,9 +27,9 @@
             <button type="submit" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 text-center w-full">Login</button>
         </form>
         <div class="mt-4 text-center">
-            <a href="{{ url_for('register') }}" class="text-blue-600 hover:underline">Register</a>
+            <a href="{{ url_for('user.register') }}" class="text-blue-600 hover:underline">Register</a>
             <span class="mx-2">|</span>
-            <a href="{{ url_for('forgot_password') }}" class="text-blue-600 hover:underline">Forgot Password?</a>
+            <a href="{{ url_for('user.forgot_password') }}" class="text-blue-600 hover:underline">Forgot Password?</a>
         </div>
     </div>
 

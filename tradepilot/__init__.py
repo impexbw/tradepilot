@@ -39,13 +39,16 @@ app.config['beat_schedule'] = {
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'user.login'
 migrate = Migrate(app, db)
 dropzone = Dropzone(app)
 
 celery = make_celery(app)
 
-from tradepilot import routes, models
+from tradepilot.user_routes import user_bp  # Import the user blueprint
+
+# Register the blueprint
+app.register_blueprint(user_bp, url_prefix='/')
 
 # Custom filter to use getattr in Jinja2
 @app.template_filter()

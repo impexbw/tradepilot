@@ -1,10 +1,10 @@
 <header class="bg-gray-50 bg-gray-800 text-white p-4 flex justify-between items-center border border-gray-700 relative">
     <div class="flex items-center">
         <!--<img src="https://via.placeholder.com/40" alt="Logo" class="mr-3">-->
-        <a href="{{ url_for('index') }}" class="text-2xl text-white font-bold">tradePilot</a>
+        <a href="{{ url_for('user.index') }}" class="text-2xl text-white font-bold">tradePilot</a>
         <!-- Desktop Menu -->
         <nav class="hidden md:flex ml-4 space-x-4">
-            <a href="{{ url_for('index') }}" class="text-gray-300 hover:text-white">Dashboard</a>
+            <a href="{{ url_for('user.index') }}" class="text-gray-300 hover:text-white">Dashboard</a>
             <a href="{{ url_for('trading_checklist') }}" class="text-gray-300 hover:text-white">Trading Checklist</a>
             <a href="{{ url_for('today_trading_plan') }}" class="text-gray-300 hover:text-white">Trading Plan</a>
             <a href="{{ url_for('calendar') }}" class="text-gray-300 hover:text-white">Calendar</a>
@@ -41,8 +41,8 @@
             </div>
         </button>
         <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20">
-            <a href="{{ url_for('profile') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">My Profile</a>
-            <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Log out</a>
+            <a href="{{ url_for('user.profile') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">My Profile</a>
+            <a href="{{ url_for('user.logout') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Log out</a>
         </div>
         <button id="mobile-menu-toggle" class="focus:outline-none ml-4 md:hidden">
             <span class="material-icons">menu</span>
@@ -83,13 +83,13 @@
     <nav class="p-4">
         <a href="{{ url_for('add_trade') }}" class="bg-blue-600 text-white w-full py-2 mb-4 block text-center">New Trade Entry</a>
         <ul>
-            <li class="mb-2"><a href="{{ url_for('index') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">dashboard</span>Dashboard</a></li>
+            <li class="mb-2"><a href="{{ url_for('user.index') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">dashboard</span>Dashboard</a></li>
             <li class="mb-2"><a href="{{ url_for('daily') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">today</span>Daily</a></li>
             <li class="mb-2"><a href="{{ url_for('calendar') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">calendar_today</span>Calendar</a></li>
             <li class="mb-2"><a href="{{ url_for('trades') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">book</span>Journal</a></li>
             <li class="mb-2"><a href="#" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">assignment</span>Setups</a></li>
             <li class="mb-2"><a href="#" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">menu_book</span>Playbook</a></li>
-            <li class="mb-2"><a href="{{ url_for('logout') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">logout</span>Log out</a></li>
+            <li class="mb-2"><a href="{{ url_for('user.logout') }}" class="flex items-center text-gray-700 hover:text-blue-600"><span class="material-icons mr-2">logout</span>Log out</a></li>
         </ul>
     </nav>
 </div>
